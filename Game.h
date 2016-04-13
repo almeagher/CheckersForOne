@@ -22,6 +22,7 @@ class Game{
 		
 		vector<vector<bool>> lightUpPositions();
 		void checkMovement(vector<vector<bool>> newBoard);
-		vector<vector<bool>> getPrevBoard();	
+		vector<vector<bool>> getPrevBoard();
+	
 
 }

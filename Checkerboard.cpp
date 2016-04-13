@@ -6,19 +6,18 @@
 using namespace std;
 
 Checkerboard::Checkerboard(){
-
-	char yellow = 'Y';
-	char black = 'R';
+	char yellow = 'y';
+	char black = 'r';
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
 			if((r+c)%2 != 0 && r <=2)
-				board[r][c] = yellow;
+				prevBoard[r][c] = yellow;
 			else if((r+c)%2 != 0 && r > 1 && r <= 4)
-				board[r][c] = 0;
+				prevBoard[r][c] = 0;
 			else if((r+c)%2 != 0 && r > 4 && r <= 7)
-            board[r][c]=red;
+            prevBoard[r][c]=red;
 			else
-				board[r][c] = 0;
+				prevBoard[r][c] = 0;
 		}
 	}
 }
@@ -70,6 +69,42 @@ void Checkerboard:: getNewBoard(vector<vector<bool>> newBoard){
 		}
 	}
 }
+
+bool Checkerboard:: checkValidMove(){
+	if(checkMovedLeft() || checkMovedRight() || checkJumped())
+		return true;
+	return false;
+}
+
+bool Checkerboard:: checkMovedLeft(){
+	return false;
+}
+
+bool Checkerboard:: checkMovedRight(){
+	return false;
+}
+
+bool Checkerboard:: checkJumped(){
+	
+	return false;
+}
+
+void Checkerboard:: checkState(){
+	
+}
+
+void Checkerboard:: moveState(){
+	
+}
+
+void Checkerboard:: transitionState(){
+	
+}
+
+void Checkerboard:: errorState(){
+	
+}
+
 // Checkerboard::~Checkerboard(){
 	// for(int r = 0; r < 8; r++){
 		// for(int c = 0; c < 8; c++){

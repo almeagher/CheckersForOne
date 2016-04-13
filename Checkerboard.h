@@ -14,14 +14,24 @@ class Checkerboard{
 	// if h v h, red goes first
    public:
    // vector <vector <int>> board(8, vector<int>(8));
+   vector <vector <int>> prevBoard;
    vector <vector <int>> board;
    Checkerboard();
    void printBoard();
 	// void setPieces();
 	void getNewMove(vector<vector<bool>> newBoard);
-	void checkValidMove();
-	void checkIfPlayerMadeMove();
-	void checkIfPlayerThinking();
+	
+	bool checkValidMove();
+	
+	bool checkMovedLeft();
+	bool checkMovedRight();
+	bool checkJumped();
+	
+	void checkState();
+	void moveState();
+	void transitionState();
+	void errorState();
+	
 	void getPossibleMoves();
 	void computerMove();
 	
