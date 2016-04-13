@@ -49,22 +49,28 @@ void Checkerboard:: printBoard(){
 // }
 
 void Checkerboard:: getNewBoard(vector<vector<bool>> newBoard){
-	vector <vector <int>> board2 (8, vector<int>(8));
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(newBoard[i][j] == 1 && board[i][j] == 0){
-				if(board[i-1][j-1] == 'Y' || board[i-1][j-1] == 'R'){
-					board[i][j] = board[i-1][j-1];
-					board[i-1][j-1] = 0;
-				}
-				else if(board[i-1][j-1] == 'Y' || board[i-1][j+1] == 'R'){
-					board[i][j] = board[i-1][j+1];
-					board[i-1][j-1] = 0;
-				}
-				else
-					cout << "invalid move";
-			}
+	// vector <vector <int>> board2 (8, vector<int>(8));
+	board.insert(board.end(), newBoard.begin(), newBoard.end());
+	// for(int i = 0; i < 8; i++){
+		// for(int j = 0; j < 8; j++){
+			// if(newBoard[i][j] == 1 && board[i][j] == 0){
+				// if(board[i-1][j-1] == 'Y' || board[i-1][j-1] == 'R'){
+					// board[i][j] = board[i-1][j-1];
+					// board[i-1][j-1] = 0;
+				// }
+				// else if(board[i-1][j-1] == 'Y' || board[i-1][j+1] == 'R'){
+					// board[i][j] = board[i-1][j+1];
+					// board[i-1][j-1] = 0;
+				// }
+				// else
+					// cout << "invalid move";
+			// }
 				
+			
+		// }
+	// }
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
 			
 		}
 	}
@@ -77,10 +83,42 @@ bool Checkerboard:: checkValidMove(){
 }
 
 bool Checkerboard:: checkMovedLeft(){
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			// if top player
+			if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
+				return true;
+			}
+				
+			// if bottom player
+			else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
+				return true;
+			}
+				
+			else
+				continue;
+		}
+	}
 	return false;
 }
 
 bool Checkerboard:: checkMovedRight(){
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			// if top player
+			if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+				return true;
+			}
+				
+			// if bottom player
+			else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+				return true;
+			}
+				
+			else
+				continue;
+		}
+	}
 	return false;
 }
 
