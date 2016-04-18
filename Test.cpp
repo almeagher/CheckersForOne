@@ -5,11 +5,9 @@
 
 using namespace std;
 
-RGB** lightBoard(vector<vector<int>> board){
-	
-	
-	RGB** lightBoard;
-	lightBoard = new RGB*[8];
+RGB ledBoard[8][8];
+
+void lightBoard(int board[8][8]){
 	
 	RGB black = { 0, 0, 0}
 	RGB green = { 0, 255, 0}
@@ -17,19 +15,20 @@ RGB** lightBoard(vector<vector<int>> board){
 	for(unsigned r = 0; r < board.size(); r++){
 		for(unsigned c = 0; c < board.size(); c++){
 			if(board[r][c] == 1)
-				lightBoard[r][c] = green;
+				ledBoard[r][c] = green;
 			else
-				lightBoard[r][c] = black;
+				ledBoard[r][c] = black;
 		}
 	}
-	return lightBoard;
+	// return lightBoard;
 }
 
 int main(int argc, char *argv[]) {
 	Driver driver;
 	while(1){
-		int** reedBoard = driver.getPositions();
-		driver.writeToLeds(lightBoard(reedBoard));
+		int reedBoard[8][8] = driver.getPositions();
+		lightBoard(reedBoard)
+		driver.writeToLeds(ledBoard));
 		
 	}
 	
