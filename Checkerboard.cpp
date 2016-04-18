@@ -76,29 +76,53 @@ void Checkerboard:: getNewBoard(vector<vector<bool>> newBoard){
 	}
 }
 
-bool Checkerboard:: checkValidMove(){
-	if(checkMovedLeft() || checkMovedRight() || checkJumped())
+char getPieceType(int prevCoorR, int prevCoorC){
+	return prevBoard[prevCoorR][prevCoorC];
+}
+
+void Checkerboard:: checkMoved(){
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			if(checkMovedLeft(r, c) || checkMovedRight(r, c)){
+				checkValidMove(newPieceType, r, c);
+			}
+			else if(checkJumped(r, c)){
+				checkValidMove(newPieceType, r, c);
+			}
+			else if(checkThinking(r, c)){
+				showPossibleMoves(r, c);
+			}
+			else{
+				
+			}
+		}
+	}
+}
+
+bool Checkerboard:: checkThinking(int r, int c){
+	if(board[i][j] == 0 && !checkMovedLeft() && !checkMovedRight()){
 		return true;
+	}
 	return false;
 }
 
 bool Checkerboard:: checkMovedLeft(){
-	for(int r = 0; r < 8; r++){
-		for(int c = 0; c < 8; c++){
-			// if top player
-			if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
-				return true;
-			}
-				
-			// if bottom player
-			else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
-				return true;
-			}
-				
-			else
-				continue;
-		}
+	
+	// if top player
+	if(board[r][c] == prevBoard[r-1][c+1] && board[r-1][c+1] == 0){
+		newPieceType = getPieceType((r-1), (c+1));
+		return true;
 	}
+		
+	// if bottom player
+	else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
+		newPieceType = getPieceType((r+1), (c+1));
+		return true;
+	}
+		
+	else
+		return false;
+	
 	return false;
 }
 
@@ -107,11 +131,13 @@ bool Checkerboard:: checkMovedRight(){
 		for(int c = 0; c < 8; c++){
 			// if top player
 			if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+				newPieceType = getPieceType((r-1), (c-1));
 				return true;
 			}
 				
 			// if bottom player
 			else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+				newPieceType = getPieceType((r+1), (c-1));
 				return true;
 			}
 				
@@ -120,6 +146,19 @@ bool Checkerboard:: checkMovedRight(){
 		}
 	}
 	return false;
+}
+
+bool Checkerboard:: checkValidMove(r, c){
+	if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+		newPieceType = getPieceType((r-1), (c-1));
+		return true;
+	}
+		
+	// if bottom player
+	else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+		newPieceType = getPieceType((r+1), (c-1));
+		return true;
+	}
 }
 
 bool Checkerboard:: checkJumped(){

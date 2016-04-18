@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "Checkerboard.h"
+#include <iostream>
 
 using namespace std;
 
@@ -24,17 +25,19 @@ void endEarly(bool endEarly){
 
 int main(int argc, char** argv) {
 	vector<vector <bool>> test (8, vector<bool>(8));
-	ifstream file;
-	file.open("file2.txt");
+	// ifstream file;
+	// file.open("file2.txt");
 	
-	while(!file.eof()){
+	// while(!file.eof()){
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
-				file >> test[i][j];
+				bool x;
+				cin >> x;
+				test[i][j] = x;
 			}
 		}
-	}
-	
+	// }
+	cerr << test[0][0];
 	Checkerboard* cb = new Checkerboard();
 	cb->printBoard();
 	// cb->setPieces();

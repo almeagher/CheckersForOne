@@ -1,5 +1,14 @@
 #include "Driver.h"
+// #include <vector>
 
+<<<<<<< HEAD
+using std::vector;
+vector <vector<bool>> readOccupation(){
+	vector <vector<bool>> b;
+	return b;
+}
+=======
+>>>>>>> origin/master
 
 void Driver::write_color_table(int i,int j,lpd8806_buffer buf,RGB color)
  {

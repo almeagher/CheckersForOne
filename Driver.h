@@ -63,16 +63,11 @@
 using namespace std;
 
 typedef struct RGB {
+
 	int r;
 	int g;
 	int b;
 } RGB;
-
-
-
-
-
-
 
 class Driver{
 	
