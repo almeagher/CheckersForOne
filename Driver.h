@@ -1,82 +1,53 @@
-#include <cstdlib>
-#include <vector>
-#include <sys/types.h>
-#include <sys/socket.h>
 
-#include <ctime>
-#include <time.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <iostream>
-#include <string>
-#include <ctime>
-#include <fstream>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/time.h>
-#include <cassert>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/select.h>
-
-
-#include <sstream>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <errno.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <unistd.h>
-#include <unistd.h>
-#include <time.h>
-
-
-#include <ctime>
-#include <fstream>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <string.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "lpd8806led.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <wiringPi.h>
 #include <pcf8574.h>
+//#include "mux.h"
+
 
 using namespace std;
 
 typedef struct RGB {
-
 	int r;
 	int g;
 	int b;
 } RGB;
 
+
+
+
+
+
+
 class Driver{
 	
+	private:
+	int fd;              /* SPI device file descriptor */
+    int leds; /* 75 LEDs in te strand */
+  lpd8806_buffer buf;      /* Memory buffer for pixel values */
+  RGB temp_color;
+  int table[8][8];
+	
+	
+	
 	public:
-		void writeToLeds(RGB rgbp[8][8],lpd8806_buffer buf,RGB color);
+		Driver();
 		
-		void write_color_table(int i,int j,lpd8806_buffer buf, RGB color);
+		~Driver();
 		
-		void clear_led(lpd8806_buffer buf,const int leds);
+		void writeToLeds(RGB rgbp[8][8]);
+		
+		void write_color_table(int i,int j, RGB color);
+		
+		void clear_led();
+		
+		void setup_pcf();
+		int scan();
+		void printint();
+
 		//vector<vector<bool>> readOccupation(); 
 	//	void waitForChange(int timeOutMS);
 		//void writeToLeds(RGB rgbp[8][8]);
