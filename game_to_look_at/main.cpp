@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
 	Checkerboard* cb = new Checkerboard();
 	// cb->setPieces();
 	cb->getNewBoard(test);
+	cb->checkMoved();
 	cb->printBoard();
 	
    return 0;

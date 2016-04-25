@@ -9,6 +9,7 @@
 
 #include "board.h"
 #include "time.h"
+// #include "Driver.cpp"
 
 //template for basic smart pointer
 //used to wrap pointers to board
@@ -30,7 +31,16 @@ class game
 {
 	//black shall be max
 	//red shall be min
-
+	typedef struct RGB {
+		unsigned int r;
+		unsigned int g;
+		unsigned int b;
+	} RGB;
+	RGB green = {0, 255, 0};
+	RGB red = {255, 0, 0};
+	// Driver driver;
+	
+	RGB lightBoard[8][8];
 	//maintains a pointer to the current board
 	sptr<board> currentB;
 

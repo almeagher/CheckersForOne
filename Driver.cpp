@@ -136,3 +136,7 @@ void Driver::setup_pcf()
 	
 }
 
+int[][] Driver::getPositions(){
+	return table;
+}
+

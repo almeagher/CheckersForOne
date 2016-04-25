@@ -47,28 +47,45 @@ void game::endMessage()
 	gameOver = true;
 	cout << "The game is over." << endl;
 	cout << endl;
-	if (currentB->getTurn() == 'r')
+	if (currentB->getTurn() == 'r'){
 		cout << "Player 1 wins." << endl;
-	else cout << "Player 2 wins." << endl;
-	cout << "Do you want to play again? (Y/N):" << endl;
-	char answer;
-	cin >> answer;
-	bool loop = true;
-	while (loop)
-	{
-		if (tolower(answer) == 'y')
-		{
-			loop = false;
-			playTheGame();
+		for(int i = 0; i < 4; i++){
+			for(int j = 0; j < 4; j++){
+				lightBoard[i][j] = green;
+			}
 		}
-		else if (tolower(answer) == 'n')
-			loop = false;
-		else
-		{
-			cout << "Do you want to play again? (Y/N):" << endl;
-			cin >> answer;
-		}
+		// driver.writeToLeds(lightBoard);
 	}
+	else{
+		cout << "Player 2 wins." << endl;
+		for(int i = 5; i < 8; i++){
+			for(int j = 5; j < 8; j++){
+				lightBoard[i][j] = green;
+			}
+		}
+		// driver.writeToLeds(lightBoard);
+	}
+	// cout << "Do you want to play again? (Y/N):" << endl;
+	// char answer;
+	// answer  = 'n';
+	// cin >> answer;
+	
+	// bool loop = true;
+	// while (loop)
+	// {
+		// if (tolower(answer) == 'y')
+		// {
+			// loop = false;
+			// playTheGame();
+		// }
+		// else if (tolower(answer) == 'n')
+			// loop = false;
+		// else
+		// {
+			// cout << "Do you want to play again? (Y/N):" << endl;
+			// cin >> answer;
+		// }
+	// }
 }
 
 //computer's turn
@@ -140,10 +157,10 @@ void game::computerTurn()
 void game::outputMessage()
 {
 	currentB->makeMove(bestM);
-	cout << "Completed search to depth " << cdepth << "." << endl;
-	if (timeUp && cdepth != maxIterDepth && !reachedEnd) //or no way to get to maxdepth since gamespace end has been reached
-		cout << "Out of time searching to depth " << cdepth + 1 << "." << endl;
-	cout << "Searched for a total of " << difftime(endTime, startTime) << " seconds" << endl;
+	// cout << "Completed search to depth " << cdepth << "." << endl;
+	// if (timeUp && cdepth != maxIterDepth && !reachedEnd) //or no way to get to maxdepth since gamespace end has been reached
+		// cout << "Out of time searching to depth " << cdepth + 1 << "." << endl;
+	// cout << "Searched for a total of " << difftime(endTime, startTime) << " seconds" << endl;
 	cout << "The chosen move is: ";
 	board::convertCommand(bestM->command);
 	cout << endl;

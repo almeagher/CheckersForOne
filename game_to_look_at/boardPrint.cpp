@@ -156,10 +156,11 @@ void board::whoComputer()
 	}
 	if (board::isComputer[0] == true || board::isComputer[1] == true)
 	{
-		cout << "Enter a time limit for the computer in seconds (3-60):" << endl;
-		cin >> timeLimit;
-		if (timeLimit > 60 || timeLimit < 3)
-			cin >> timeLimit;
+		// cout << "Enter a time limit for the computer in seconds (3-60):" << endl;
+		//  >> timeLimit;
+		timeLimit = 3;
+		// if (timeLimit > 60 || timeLimit < 3)
+			// cin >> timeLimit;
 	}
 }
 

@@ -17,8 +17,8 @@ class Checkerboard{
    // vector <vector <int>> board(8, vector<int>(8));
    // vector <vector <int>> board;
    // vector <vector <int>> prevBoard;
-   char prevBoard[8][8] = {{0}};
-   char board[8][8] = {{0}};
+   char prevBoard[8][8];
+   char board[8][8];
    
    
    Checkerboard();

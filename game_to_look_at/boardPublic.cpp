@@ -3,7 +3,7 @@
  *
  *      Author: Harrison
  */
-
+#include <typeinfo>
 #include <assert.h>
 #include "board.h"
 #include <cctype>
@@ -29,16 +29,23 @@ using std::tolower;
 //called by inputCommand
 void board::convertCommand(const string& s)
 {
+	char positionR = ' ', positionC = ' ', possibleR = ' ', possibleC = ' ';
 	string::const_iterator it = s.begin();
 	cout << "(" << (*it) << ", ";
+	positionR = (*it);
+
 	it += 2;
 	cout << (*it) << ") ";
+	positionC = (*it);
 	it += 2;
 	while (*it != '-')
 	{
 		cout << "-> (" << (*it) << ", ";
+		possibleR = (*it);
 		it += 2;
 		cout << (*it) << ") ";
+		possibleC = (*it);
+		cout << positionR << " "<< positionC << " " << possibleR << " " << possibleC;
 		it += 2;
 	}
 }
@@ -63,6 +70,7 @@ void board::inputCommand()
 	//if the end of the list is reached
 	//input command again until one is matched
 	getline(cin, m);
+	
 	list<move*>::iterator it = mlist.begin();
 	while (it != mlist.end())
 	{
@@ -291,29 +299,29 @@ void board::startup()
 	//reset the board
 	reset();
 	whoComputer();
-	bool b = true;
-	cout << "Do you want to load a game from a file? (Y/N):" << endl;
-	char c = ' ';
-	while (b)
-	{
-		cin >> c;
-		if (tolower(c) == 'y' || tolower(c) == 'n')
-			b = false;
-	}
-	if (tolower(c) == 'y')
-	{
-		string name;
-		cout << "Enter filename: " << endl;
-		cin >> name;
-		ifstream fin(name.c_str());
-		while (!fin.good())
-		{
-			cout << "Enter filename: " << endl;
-			cin >> name;
-			fin.open(name.c_str());
-		}
-		modifyBoard(fin);
-	}
+	// bool b = true;
+	// cout << "Do you want to load a game from a file? (Y/N):" << endl;
+	// char c = ' ';
+	// while (b)
+	// {
+		// cin >> c;
+		// if (tolower(c) == 'y' || tolower(c) == 'n')
+			// b = false;
+	// }
+	// if (tolower(c) == 'y')
+	// {
+		// string name;
+		// cout << "Enter filename: " << endl;
+		// cin >> name;
+		// ifstream fin(name.c_str());
+		// while (!fin.good())
+		// {
+			// cout << "Enter filename: " << endl;
+			// cin >> name;
+			// fin.open(name.c_str());
+		// }
+		// modifyBoard(fin);
+	// }
 }
 
 

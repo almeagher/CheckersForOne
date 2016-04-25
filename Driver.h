@@ -16,12 +16,6 @@ typedef struct RGB {
 	int b;
 } RGB;
 
-
-
-
-
-
-
 class Driver{
 	
 	private:
@@ -47,6 +41,7 @@ class Driver{
 		void setup_pcf();
 		int scan();
 		void printint();
+		int[][] getPositions();
 
 		//vector<vector<bool>> readOccupation(); 
 	//	void waitForChange(int timeOutMS);
