@@ -10,7 +10,13 @@ Checkerboard::Checkerboard(){
 	char red = 'r';
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			board [r][c] = 0;
+			board [r][c] = '0';
+		}
+	}
+	
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			ledBoard [r][c] = blank;
 		}
 	}
 	
@@ -18,20 +24,23 @@ Checkerboard::Checkerboard(){
 		for(int c = 0; c < 8; c++){
 			if((r+c)%2 != 0 && r <=2)
 				// prevBoard[r][c] = black;
-				prevBoard[r][c] = 1;
+				prevBoard[r][c] = '1';
 			else if((r+c)%2 != 0 && r > 1 && r <= 4)
-				prevBoard[r][c] = 0;
+				prevBoard[r][c] = '0';
 			else if((r+c)%2 != 0 && r > 4 && r <= 7)
 				// prevBoard[r][c]=red;
-				prevBoard[r][c]= 1;
+				prevBoard[r][c]= '1';
 			else
-				prevBoard[r][c] = 0;
+				prevBoard[r][c] = '0';
 		}
 	}
 }
 
 void Checkerboard:: printBoard(){
+	cout << "    0 1 2 3 4 5 6 7" << endl;
+	cout << "-------------------" << endl;
 	for(int r = 0; r < 8; r++){
+		cout << r << " | ";
 		for(int c = 0; c < 8; c++){
 			cout << board [r][c] << " ";
 		}
@@ -39,21 +48,21 @@ void Checkerboard:: printBoard(){
 	}
 }
 
-void Checkerboard:: getNewBoard(int newBoard[8][8]){
+void Checkerboard:: printLED(){
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			cout << "(" << ledBoard[r][c].r << "," << ledBoard[r][c].g << "," << ledBoard[r][c].b << ") ";
+		}
+		cout << endl;
+	}
+}
+
+void Checkerboard:: getNewBoard(char newBoard[8][8]){
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
 			board[r][c] = newBoard[r][c];
-			cout << board[r][c] << " ";
 		}
-		cout << endl;
 	}
-	for(int r = 0; r < 8; r++){
-		for(int c = 0; c < 8; c++){
-			cout << board[r][c] << " ";
-		}
-		cout << endl;
-	}
-	
 }
 
 char Checkerboard:: getPieceType(int prevCoorR, int prevCoorC){
@@ -113,63 +122,43 @@ bool Checkerboard:: checkMovedRight(int r, int c){
 
 
 void Checkerboard:: checkMoved(){
-	// cout << "PREV BOARD: " << endl;
-	// for(int r = 0; r < 8; r++){
-		// for(int c = 0; c < 8; c++){
-			// cout << prevBoard[r][c] << " ";
-		// }
-		// cout << endl;
-	// }
-	// cout << "NEW BOARD: " << endl;
-	// for(int r = 0; r < 8; r++){
-		// for(int c = 0; c < 8; c++){
-			// cout << board[r][c] << " ";
-		// }
-		// cout << endl;
-	// }
-	
-	
-	
+	coord movedFrom {-2, -2};
+	coord movedTo {-2, -2};
+	cout << "Diff array" << endl;
+	int diffArray[8][8];
+	bool pieceMoved = false;
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			//LEFT
-			if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
-				// cout << "Moved " << r-1 << " " << c+1 << " to " << r << " " << c << endl;
-				// cout << "Moved left" << endl;
+			diffArray[r][c] = board[r][c] - prevBoard[r][c];
+			cout << diffArray[r][c] << " ";
+			if(board[r][c] - prevBoard[r][c] == -1 && pieceMoved == false){
+				movedFrom = {r, c};
+				pieceMoved = true;
 			}
-			else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
-				// cout << "Moved left" << endl;
-			} //RIGHT
-			else if(board[r][c] == prevBoard[r-1][c+1] && board[r-1][c+1] == 0){
-				// cout << "Moved right" << endl;
+			else if(board[r][c] - prevBoard[r][c] == -1 && pieceMoved == true){
+				cout << "you moved two different pieces at once" << endl;
+				ledBoard[movedFrom.x][movedFrom.y] = error;
+				ledBoard[r][c] = error;
 			}
-			else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
-				// cout << "Moved right" << endl;
+			if(board[r][c] - prevBoard[r][c] == 1 && pieceMoved == false){
+				movedTo = {r, c};
 			}
-			else {
-				
-				
-			}
-			// else if(){ // piece is picked up
-				
-			// }
-			// else if(){ // piece jumped
-				
-			// }
-			
-			// if(checkMovedLeft(r, c) || checkMovedRight(r, c)){
-				// checkValidMove(newPieceType, r, c);
-			// }
-			// else if(checkJumped(r, c)){
-				// checkValidMove(newPieceType, r, c);
-			// }
-			// else if(checkThinking(r, c)){
-				// showPossibleMoves(r, c);
-			// }
-			// else{
-				
-			// }
 		}
+		cout << endl;
+	}
+	
+	if(movedFrom.x == -2 && movedFrom.y == -2 && movedTo.x == -2 && movedTo.y == -2){
+		cout << "didn't move" << endl;
+	}
+	
+	else if(movedTo.x == -2 && movedTo.y == -2){
+		cout << "transition mode" << endl;
+	}
+	else if(pieceMoved == true){
+		cout << "error state" << endl;
+	}
+	else{
+		cout << movedFrom.x << " " << movedFrom.y << " -> " << movedTo.x << " " << movedTo.y << endl;
 	}
 }
 

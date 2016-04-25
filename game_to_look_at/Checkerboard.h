@@ -4,10 +4,15 @@
 using namespace std;
 
 typedef struct RGB {
-	unsigned int r;
-	unsigned int g;
-	unsigned int b;
+	int r;
+	int g;
+	int b;
 } RGB;
+
+typedef struct coord {
+	int x;
+	int y;
+} coord;
 
 class Checkerboard{
 	// if h v c, human is bottom - red, comp is yellow
@@ -19,12 +24,16 @@ class Checkerboard{
    // vector <vector <int>> prevBoard;
    char prevBoard[8][8];
    char board[8][8];
-   
+   RGB ledBoard[8][8];
+   RGB error = {128, 0, 0};
+   RGB possible = {0,128, 0};
+   RGB blank = {0,0, 0};
    
    Checkerboard();
    void printBoard();
+   void printLED();
 	// void setPieces();
-	void getNewBoard(int newBoard[8][8]);
+	void getNewBoard(char newBoard[8][8]);
 	char getPieceType(int r, int c);
 	void checkMoved();
 	void showPossibleMoves(int r, int c);

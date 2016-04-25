@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "Checkerboard.cpp"
+#include "Checkerboard.h"
 #include <iostream>
 
 using namespace std;
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 	// vector<vector <bool>> test (8, vector<bool>(8));
 	// ifstream file;
 	// file.open("file2.txt");
-	int test[8][8] = {{0}};
+	char test[8][8] = {{'0'}};
 	
 	// while(!file.eof()){
 		for(int i = 0; i < 8; i++){
@@ -43,12 +43,12 @@ int main(int argc, char** argv) {
 	cout << endl << endl;
 	// cerr << test[0][0];
 
-	Checkerboard* cb = new Checkerboard();
+	Checkerboard* cb = new Checkerboard;
 	// cb->setPieces();
 	cb->getNewBoard(test);
 	cb->checkMoved();
 	cb->printBoard();
-	
+	cb->printLED();
    return 0;
 }
 
