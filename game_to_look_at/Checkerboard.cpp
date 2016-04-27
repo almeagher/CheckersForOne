@@ -48,6 +48,12 @@ void Checkerboard:: printBoard(){
 	}
 }
 
+void Checkerboard:: setPlayers(bool p1, bool p2){
+	checkers.playTheGame(p1, p2);
+	// 
+	
+}
+
 void Checkerboard:: printLED(){
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
@@ -65,60 +71,58 @@ void Checkerboard:: getNewBoard(char newBoard[8][8]){
 	}
 }
 
-char Checkerboard:: getPieceType(int prevCoorR, int prevCoorC){
-	return prevBoard[prevCoorR][prevCoorC];
-}
-
+// char Checkerboard:: getPieceType(int prevCoorR, int prevCoorC){
+	// return prevBoard[prevCoorR][prevCoorC];
+// }
 
 void Checkerboard:: showPossibleMoves(int r, int c){
 	
 }
 
 bool Checkerboard:: checkThinking(int r, int c){
-	if(board[r][c] == 0 && !checkMovedLeft(r, c) && !checkMovedRight(r, c)){
-		return true;
-	}
+	// if(board[r][c] == 0 && !checkMovedLeft(r, c) && !checkMovedRight(r, c)){
+		// return true;
+	// }
 	return false;
 }
 
-bool Checkerboard:: checkMovedLeft(int r, int c){
-	
-	// if top player
-	if(board[r][c] == prevBoard[r-1][c+1] && board[r-1][c+1] == 0){
-		// newPieceType = getPieceType((r-1), (c+1));
-		cout << "Moved " << r-1 << " " << c+1 << " to " << r << " " << c << endl;
-		return true;
-	}
+// bool Checkerboard:: checkMovedLeft(int r, int c){
+	// // if top player
+	// if(board[r][c] == prevBoard[r-1][c+1] && board[r-1][c+1] == 0){
+		// // newPieceType = getPieceType((r-1), (c+1));
+		// cout << "Moved " << r-1 << " " << c+1 << " to " << r << " " << c << endl;
+		// return true;
+	// }
 		
-	// if bottom player
-	else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
-		// newPieceType = getPieceType((r+1), (c+1));
-		return true;
-	}
+	// // if bottom player
+	// else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
+		// // newPieceType = getPieceType((r+1), (c+1));
+		// return true;
+	// }
 		
-	else
-		return false;
+	// else
+		// return false;
 	
-	return false;
-}
+	// return false;
+// }
 
-bool Checkerboard:: checkMovedRight(int r, int c){
-	// if top player
-	if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
-		// newPieceType = getPieceType((r-1), (c-1));
-		return true;
-	}
+// bool Checkerboard:: checkMovedRight(int r, int c){
+	// // if top player
+	// if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+		// // newPieceType = getPieceType((r-1), (c-1));
+		// return true;
+	// }
 		
-	// if bottom player
-	else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
-		// newPieceType = getPieceType((r+1), (c-1));
-		return true;
-	}
+	// // if bottom player
+	// else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+		// // newPieceType = getPieceType((r+1), (c-1));
+		// return true;
+	// }
 		
-	else
-		return false;
-	return false;
-}
+	// else
+		// return false;
+	// return false;
+// }
 
 
 void Checkerboard:: checkMoved(){
@@ -153,27 +157,29 @@ void Checkerboard:: checkMoved(){
 	
 	else if(movedTo.x == -2 && movedTo.y == -2){
 		cout << "transition mode" << endl;
+		showPossibleMoves(movedFrom.x, movedFrom.y);
 	}
 	else if(pieceMoved == true){
 		cout << "error state" << endl;
 	}
 	else{
 		cout << movedFrom.x << " " << movedFrom.y << " -> " << movedTo.x << " " << movedTo.y << endl;
+		// checkValidMove();
 	}
 }
 
-bool Checkerboard:: checkValidMove(char oldPieceType, int r, int c){
-	if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
-		newPieceType = getPieceType((r-1), (c-1));
-		return true;
-	}
+// bool Checkerboard:: checkValidMove(char oldPieceType, int r, int c){
+	// if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+		// newPieceType = getPieceType((r-1), (c-1));
+		// return true;
+	// }
 		
-	// if bottom player
-	else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
-		newPieceType = getPieceType((r+1), (c-1));
-		return true;
-	}
-}
+	// // if bottom player
+	// else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+		// newPieceType = getPieceType((r+1), (c-1));
+		// return true;
+	// }
+// }
 
 bool Checkerboard:: checkJumped(int r, int c){
 	

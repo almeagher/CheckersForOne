@@ -12,6 +12,8 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include "Driver.h"
+
 
 class jump
 {
@@ -110,8 +112,18 @@ class board
 	//[0] for black, [1] for red
 	//default initialized to false since it's a static array
 	static bool isComputer[2];
-
-    //---------------------------------------------------------------------------------
+	Driver driver;
+	typedef struct RGB {
+		unsigned int r;
+		unsigned int g;
+		unsigned int b;
+	} RGB;
+	RGB green = {0, 255, 0};
+	RGB red = {255, 0, 0};
+	RGB ledBoard[8][8];
+	
+	void setLEDBoard();
+	//---------------------------------------------------------------------------------
 	//functions for board creation, found in board.cpp:
 	//---------------------------------------------------------------------------------
 	//1: constructor for initializing an initial board
@@ -243,7 +255,7 @@ class board
 	//---------------------------------------------------------------------------------
 
 	//modifies who is a computer, called by startup
-	static void whoComputer();
+	static void whoComputer(bool p1, bool p2);
     
 //-------------------------------------------------------------------------------------
 // FUNCTIONS AND MEMBERS UTILIZED DIRECTLY IN GAME.H:
@@ -299,7 +311,7 @@ class board
 	int evaluate();
 
 	//determines whether or not players will be a computer calls modifyBoard
-	void startup();
+	void startup(bool p1, bool p2);
 
 	//gets the current color's turn
     //is inlined

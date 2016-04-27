@@ -13,7 +13,7 @@
 #include <list>
 #include <limits>
 #include <string>
-
+#include <vector>
 using std::cin;
 using std::cout;
 using std::endl;
@@ -27,8 +27,16 @@ using std::tolower;
 //2 3 3 2 -1
 //is converted to (2, 3) -> (3, 2)
 //called by inputCommand
+std::vector<char> possible;
+void board::setLEDBoard(){
+	for(int i = 0; i < possible.size(); i+= 2){
+		ledBoard[possible[i]][possible[i+1]] = green;
+	}
+	driver.writeToLeds(ledBoard);
+}
 void board::convertCommand(const string& s)
 {
+	
 	char positionR = ' ', positionC = ' ', possibleR = ' ', possibleC = ' ';
 	string::const_iterator it = s.begin();
 	cout << "(" << (*it) << ", ";
@@ -46,8 +54,15 @@ void board::convertCommand(const string& s)
 		cout << (*it) << ") ";
 		possibleC = (*it);
 		cout << positionR << " "<< positionC << " " << possibleR << " " << possibleC;
+		// string x;
+		// x.append(positionR + " " + positionC + " " + possibleR + " " + possibleC);
+		possible.push_back(positionR);
+		possible.push_back(positionC);
+		possible.push_back(possibleR);
+		possible.push_back(possibleC);
 		it += 2;
 	}
+	
 }
 
 //functions for outputting commands
@@ -294,34 +309,11 @@ int board::evaluate()
 }
 
 //determines whether or not players will be a computer calls modifyBoard
-void board::startup()
+void board::startup(bool p1, bool p2)
 {
 	//reset the board
 	reset();
-	whoComputer();
-	// bool b = true;
-	// cout << "Do you want to load a game from a file? (Y/N):" << endl;
-	// char c = ' ';
-	// while (b)
-	// {
-		// cin >> c;
-		// if (tolower(c) == 'y' || tolower(c) == 'n')
-			// b = false;
-	// }
-	// if (tolower(c) == 'y')
-	// {
-		// string name;
-		// cout << "Enter filename: " << endl;
-		// cin >> name;
-		// ifstream fin(name.c_str());
-		// while (!fin.good())
-		// {
-			// cout << "Enter filename: " << endl;
-			// cin >> name;
-			// fin.open(name.c_str());
-		// }
-		// modifyBoard(fin);
-	// }
+	whoComputer(p1, p2);
 }
 
 

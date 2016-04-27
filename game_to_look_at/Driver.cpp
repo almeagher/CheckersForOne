@@ -1,142 +1,142 @@
-// #include "Driver.h"
+#include "Driver.h"
 
-// Driver :: ~Driver()
-// {
-	// /* Free the pixel buffer */
-  // lpd8806_free(&buf);
+Driver :: ~Driver()
+{
+	/* Free the pixel buffer */
+  lpd8806_free(&buf);
 
-  // /* Close the SPI device */
-  // close(fd);
-// }
+  /* Close the SPI device */
+  close(fd);
+}
 
- // Driver::Driver()
-// {
+ Driver::Driver()
+{
 	
-	// setup_pcf();
-	// set_gamma(2.5,2.5,2.5);
-	// leds= 64;
+	setup_pcf();
+	set_gamma(2.5,2.5,2.5);
+	leds= 64;
 		
-		// fd = open("/dev/spidev0.0",O_WRONLY);
-  // if(fd<0) {
-      // /* Open failed */
-      // fprintf(stderr, "Error: SPI device open failed.\n");
-      // exit(1);
-  // }
+		fd = open("/dev/spidev0.0",O_WRONLY);
+  if(fd<0) {
+      /* Open failed */
+      fprintf(stderr, "Error: SPI device open failed.\n");
+      exit(1);
+  }
 
-  // /* Initialize SPI bus for lpd8806 pixels */
-  // if(spi_init(fd)<0) {
-      // /* Initialization failed */
-      // fprintf(stderr, "Unable to initialize SPI bus.\n");
-      // exit(1);
-  // }
+  /* Initialize SPI bus for lpd8806 pixels */
+  if(spi_init(fd)<0) {
+      /* Initialization failed */
+      fprintf(stderr, "Unable to initialize SPI bus.\n");
+      exit(1);
+  }
 
-  // /* Allocate memory for the pixel buffer and initialize it */
-  // if(lpd8806_init(&buf,leds)<0) {
-      // /* Memory allocation failed */
-      // fprintf(stderr, "Insufficient memory for pixel buffer.\n");
-      // exit(1);
-  // }
+  /* Allocate memory for the pixel buffer and initialize it */
+  if(lpd8806_init(&buf,leds)<0) {
+      /* Memory allocation failed */
+      fprintf(stderr, "Insufficient memory for pixel buffer.\n");
+      exit(1);
+  }
 
-  // /* Loop Forever */
+  /* Loop Forever */
   
-  // for(int i=0;i<leds;i++) {
+  for(int i=0;i<leds;i++) {
     
-      // write_gamma_color(&buf.pixels[i],0x00,0x00,0x00);
+      write_gamma_color(&buf.pixels[i],0x00,0x00,0x00);
       
-  // }
+  }
   
   
-    // send_buffer(fd,&buf);
-// }
+    send_buffer(fd,&buf);
+}
 
-// void Driver::write_color_table(int i,int j,RGB color)
- // {
-	  // if(j%2==0)
-	  // {
+void Driver::write_color_table(int i,int j,RGB color)
+ {
+	  if(j%2==0)
+	  {
 	
-		  // write_gamma_color(&buf.pixels[j*8+i],color.r,color.g,color.b);
-	  // }
-	  // else if (j%2!=0)
+		  write_gamma_color(&buf.pixels[j*8+i],color.r,color.g,color.b);
+	  }
+	  else if (j%2!=0)
 		  
-	  // {
+	  {
 		  
-		  // write_gamma_color(&buf.pixels[(j+1)*8-1-i],color.r,color.g,color.b);
-	  // }
+		  write_gamma_color(&buf.pixels[(j+1)*8-1-i],color.r,color.g,color.b);
+	  }
 	  
-	  // send_buffer(fd,&buf);
-  // }
+	  send_buffer(fd,&buf);
+  }
   
   
 
-// void Driver::writeToLeds(RGB rgbp[8][8])
-// {
-	// for(int i=0; i<8; i++)
-	// {
-		// for(int j=0; j<8;j++)
-		// {
-			// temp_color = rgbp[i][j];
-			// write_color_table(i,j, temp_color);
+void Driver::writeToLeds(RGB rgbp[8][8])
+{
+	for(int i=0; i<8; i++)
+	{
+		for(int j=0; j<8;j++)
+		{
+			temp_color = rgbp[i][j];
+			write_color_table(i,j, temp_color);
 			
-		// }
-// }
-// }
+		}
+}
+}
 
-// void Driver::clear_led()
-// {
-	// for(int i=0;i<leds;i++) {
+void Driver::clear_led()
+{
+	for(int i=0;i<leds;i++) {
     
-      // write_gamma_color(&buf.pixels[i],0x00,0x00,0x00);
+      write_gamma_color(&buf.pixels[i],0x00,0x00,0x00);
       
-  // }
-  // send_buffer(fd,&buf);
-// }
+  }
+  send_buffer(fd,&buf);
+}
 
-// int Driver::scan()
-// {
-	// for(int i=1;i<9;i++)
-	// {
-		// for (int j=0;j<8;j++)
-		// {
-			// table[j][i-1]=digitalRead(100*i+j);
-		// }
-	// }
-// }
+int Driver::scan()
+{
+	for(int i=1;i<9;i++)
+	{
+		for (int j=0;j<8;j++)
+		{
+			table[j][i-1]=digitalRead(100*i+j);
+		}
+	}
+}
 
-// void Driver::printint()
-// {
-	// for(int i=0;i<8; i++)
-	// {
-		// for(int j=0;j<8;j++)
-		// {
-			// printf("%d ",table[i][j]);
+void Driver::printint()
+{
+	for(int i=0;i<8; i++)
+	{
+		for(int j=0;j<8;j++)
+		{
+			printf("%d ",table[i][j]);
 			
-		// }
-		// printf("\n");
-	// }
-// }
-// void Driver::setup_pcf()
-// {
+		}
+		printf("\n");
+	}
+}
+void Driver::setup_pcf()
+{
 
-	// pcf8574Setup(100,0x20);
-	// pcf8574Setup(200,0x21);
-	// pcf8574Setup(300,0x22);
-	// pcf8574Setup(400,0x23);
-	// pcf8574Setup(500,0x24);
-	// pcf8574Setup(600,0x25);
-	// pcf8574Setup(700,0x26);
-	// pcf8574Setup(800,0x27);
-	// for(int i=1; i<9;i++)
-	// {
-		// for (int j=0; j<8;j++)
-			// {
-				// pinMode(i*100+j,INPUT);
-			// }
+	pcf8574Setup(100,0x20);
+	pcf8574Setup(200,0x21);
+	pcf8574Setup(300,0x22);
+	pcf8574Setup(400,0x23);
+	pcf8574Setup(500,0x24);
+	pcf8574Setup(600,0x25);
+	pcf8574Setup(700,0x26);
+	pcf8574Setup(800,0x27);
+	for(int i=1; i<9;i++)
+	{
+		for (int j=0; j<8;j++)
+			{
+				pinMode(i*100+j,INPUT);
+			}
 		
-	// }
+	}
 	
-// }
+}
 
-// int[][] Driver::getPositions(){
-	// return table;
-// }
+int[][] Driver::getPositions(){
+	return table;
+}
 

@@ -24,27 +24,19 @@ void endEarly(bool endEarly){
 }
 
 int main(int argc, char** argv) {
-	// vector<vector <bool>> test (8, vector<bool>(8));
-	// ifstream file;
-	// file.open("file2.txt");
+	bool player1 = true;
+	bool player2 = false;
+	Checkerboard* cb = new Checkerboard;
+	cb->setPlayers(player1, player2);
 	char test[8][8] = {{'0'}};
 	
-	// while(!file.eof()){
-		for(int i = 0; i < 8; i++){
-			for(int j = 0; j < 8; j++){
-				// int x;
-				cin >> test[i][j];
-				// cout << test[i][j] << " ";
-				// test[i][j] = x;
-			}
-			// cout << endl;
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			cin >> test[i][j];
 		}
-	// }
-	cout << endl << endl;
-	// cerr << test[0][0];
+	}
 
-	Checkerboard* cb = new Checkerboard;
-	// cb->setPieces();
+	
 	cb->getNewBoard(test);
 	cb->checkMoved();
 	cb->printBoard();

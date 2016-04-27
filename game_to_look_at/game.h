@@ -112,7 +112,7 @@ public:
 
 	//calls startup
 	//calls appropriate functions to play checkers
-	void playTheGame();
+	void playTheGame(bool p1, bool p2);
 
 };
 

@@ -31,10 +31,10 @@ game::game(): currentB(sptr<board>(new board())), bestM(NULL), tempBestM(NULL), 
 		startTimeD(0), endTimeD(0) {}
 
 //generates more turns and starts up the game
-void game::playTheGame()
+void game::playTheGame(bool p1, bool p2)
 {
 	gameOver = false;
-	currentB->startup();
+	currentB->startup(p1, p2);
 	while (!gameOver)
 		printGame();
 }
@@ -65,27 +65,6 @@ void game::endMessage()
 		}
 		// driver.writeToLeds(lightBoard);
 	}
-	// cout << "Do you want to play again? (Y/N):" << endl;
-	// char answer;
-	// answer  = 'n';
-	// cin >> answer;
-	
-	// bool loop = true;
-	// while (loop)
-	// {
-		// if (tolower(answer) == 'y')
-		// {
-			// loop = false;
-			// playTheGame();
-		// }
-		// else if (tolower(answer) == 'n')
-			// loop = false;
-		// else
-		// {
-			// cout << "Do you want to play again? (Y/N):" << endl;
-			// cin >> answer;
-		// }
-	// }
 }
 
 //computer's turn

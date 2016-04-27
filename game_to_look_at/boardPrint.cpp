@@ -118,49 +118,57 @@ void board::printcolor(const char& c)
 
 //called by startup, which is found in board.h
 //prompts user to assign who is/ is not a computer
-void board::whoComputer()
+void board::whoComputer(bool p1, bool p2)
 {
-	bool b = true;
-	char c = ' ';
-	while (b)
-	{
-		cout << "Will player # 1 be a computer? (Y/N):" << endl;
-		cin >> c;
-		if (tolower(c) == 'y')
-		{
-			board::isComputer[0] = true;
-			b = false;
-		}
-		else if (tolower(c) == 'n')
-		{
-			board::isComputer[0] = false;
-			b = false;
-		}
-	}
-	b = true;
-	c = ' ';
-	while (b)
-	{
-		cout << "Will player # 2 be a computer? (Y/N):" << endl;
-		cin >> c;
-		if (tolower(c) == 'y')
-		{
-			board::isComputer[1] = true;
-			b = false;
-		}
-		else if (tolower(c) == 'n')
-		{
-			board::isComputer[1] = false;
-			b = false;
-		}
-	}
-	if (board::isComputer[0] == true || board::isComputer[1] == true)
-	{
+	if(p1)
+		board::isComputer[0] = true;
+	else if(!p1)
+		board::isComputer[0] = false;
+	else if(p2)
+		board::isComputer[1] = true;
+	else
+		board::isComputer[1] = false;
+	// bool b = true;
+	// char c = ' ';
+	// while (b)
+	// {
+		// cout << "Will player # 1 be a computer? (Y/N):" << endl;
+		// cin >> c;
+		// if (tolower(c) == 'y')
+		// {
+			// board::isComputer[0] = true;
+			// b = false;
+		// }
+		// else if (tolower(c) == 'n')
+		// {
+			// board::isComputer[0] = false;
+			// b = false;
+		// }
+	// }
+	// b = true;
+	// c = ' ';
+	// while (b)
+	// {
+		// cout << "Will player # 2 be a computer? (Y/N):" << endl;
+		// cin >> c;
+		// if (tolower(c) == 'y')
+		// {
+			// board::isComputer[1] = true;
+			// b = false;
+		// }
+		// else if (tolower(c) == 'n')
+		// {
+			// board::isComputer[1] = false;
+			// b = false;
+		// }
+	// }
+	// if (board::isComputer[0] == true || board::isComputer[1] == true)
+	// {
 		// cout << "Enter a time limit for the computer in seconds (3-60):" << endl;
 		//  >> timeLimit;
 		timeLimit = 3;
 		// if (timeLimit > 60 || timeLimit < 3)
 			// cin >> timeLimit;
-	}
+	// }
 }
 
