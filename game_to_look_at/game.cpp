@@ -15,6 +15,7 @@
 #include "board.h"
 #include <time.h>
 
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -31,19 +32,17 @@ game::game(): currentB(sptr<board>(new board())), bestM(NULL), tempBestM(NULL), 
 		startTimeD(0), endTimeD(0) {}
 
 //generates more turns and starts up the game
-void game::playTheGame(bool p1, bool p2)
-{
+void game::playTheGame(bool p1, bool p2, Driver &driver, Checkerboard &chk){
 	gameOver = false;
 	currentB->startup(p1, p2);
 	while (!gameOver)
-		printGame();
+		printGame(driver, chk);
 }
 
 //message for game over
 //prompts user to play again or not
 //calls playTheGame if answer is yes
-void game::endMessage()
-{
+void game::endMessage(Driver &driver){
 	gameOver = true;
 	cout << "The game is over." << endl;
 	cout << endl;
@@ -51,19 +50,23 @@ void game::endMessage()
 		cout << "Player 1 wins." << endl;
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
-				lightBoard[i][j] = green;
+				ledBoard[i][j].r = 0;
+				ledBoard[i][j].g = 128;
+				ledBoard[i][j].b = 0;
 			}
 		}
-		// driver.writeToLeds(lightBoard);
+		driver.writeToLeds(ledBoard);
 	}
 	else{
 		cout << "Player 2 wins." << endl;
 		for(int i = 5; i < 8; i++){
 			for(int j = 5; j < 8; j++){
-				lightBoard[i][j] = green;
+				ledBoard[i][j].r = 0;
+				ledBoard[i][j].g = 128;
+				ledBoard[i][j].b = 0;
 			}
 		}
-		// driver.writeToLeds(lightBoard);
+		driver.writeToLeds(ledBoard);
 	}
 }
 
@@ -71,28 +74,24 @@ void game::endMessage()
 //calls alpha beta search
 //if there's only one available move, makes that move immediately
 //prints out depth searched to, time searching, and move made afterwards through outputMessage
-void game::computerTurn()
-{
+void game::computerTurn(Driver &driver, Checkerboard &chk){
 	//moves for current board are already created in printGame function
 	//game over scenario also taken care of in printGame
-	currentB->printMoves();
+	currentB->printMoves(driver, chk);
 	cout << "The computer will make a move." << endl;
 
 	//if there's only one move to make, make it immediately
 	//this may occur for jump moves
-	if (currentB->mlist.size() == 1)
-	{
+	if (currentB->mlist.size() == 1){
 		bestM = currentB->mlist.front();
 		time(&startTime);
 		time(&endTime);
 		cdepth = 0;
 	}
-	else
-	{
+	else{
 		//start the timer for the search
 		time(&startTime);
-		for (int i = 1; i != maxIterDepth; ++i)
-		{
+		for (int i = 1; i != maxIterDepth; ++i){
 			//keep track of amount of time searched up to a specific depth
 			time(&startTimeD);
 
@@ -105,8 +104,7 @@ void game::computerTurn()
 
 			//if the search up to a specific depth took more than half the time limit
 			//terminate the search by breaking out of the loop
-			if (difftime(endTimeD, startTimeD) >= ((board::timeLimit)/2))
-			{
+			if (difftime(endTimeD, startTimeD) >= ((board::timeLimit)/2)){
 				time(&endTime);
 				timeUp = true;
 				break;
@@ -128,22 +126,28 @@ void game::computerTurn()
 	assert(bestM != NULL);
 
 	//output appropriate message for computer's search results
-	outputMessage();
+	outputMessage(driver, chk);
 }
 
 //prints out computer's move
 //also resets bestM, tempBestM, timeUp, and reachedEnd
-void game::outputMessage()
-{
+void game::outputMessage(Driver &driver, Checkerboard &chk){
 	currentB->makeMove(bestM);
-	// cout << "Completed search to depth " << cdepth << "." << endl;
-	// if (timeUp && cdepth != maxIterDepth && !reachedEnd) //or no way to get to maxdepth since gamespace end has been reached
-		// cout << "Out of time searching to depth " << cdepth + 1 << "." << endl;
-	// cout << "Searched for a total of " << difftime(endTime, startTime) << " seconds" << endl;
 	cout << "The chosen move is: ";
-	board::convertCommand(bestM->command);
+	board::convertCommand(bestM->command, driver, chk);
+	vector<int> p = (board:: getPossible());
+	string compMove = to_string(p[0]) + " " + to_string(p[1]) + " " + to_string(p[2]) + " " + to_string(p[3]);
+	cout <<"Comp moved: " << compMove << endl;
+	board::setLEDBoard(board::getPossible(), driver, chk);
 	cout << endl;
-
+	
+	
+	
+	/*if(chk.getPieceMoved() == compMove){
+		
+	}*/
+	
+	
 	//resets everything used for next alpha-beta search
 	bestM = NULL;
 	tempBestM = NULL;
@@ -157,23 +161,20 @@ void game::outputMessage()
 //if the game has not ended, it
 //makes the computer make a move
 //or prompts user to make a move
-void game::printGame()
-{
+void game::printGame(Driver &driver, Checkerboard &chk){
 	currentB->printBoard();
 	if (currentB->terminalTest())
-		endMessage();
+		endMessage(driver);
 	else if (currentB->isComputerTurn())
-		computerTurn();
+		computerTurn(driver, chk);
 	else
-		currentB->inputCommand();
+		currentB->inputCommand(driver, chk);
 }
 
 //fail-hard alpha beta
 //returns alpha / beta instead of value
-int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta)
-{
-	if (depth != maxdepth && b->terminalTest())	//don't need to compute moves for depth 0
-	{
+int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta){
+	if (depth != maxdepth && b->terminalTest()){	//don't need to compute moves for depth 0
 		//b->printBoard();
 		reachedEnd = true;	//set reached end as true
 		cdepth = maxdepth;
@@ -184,16 +185,14 @@ int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta)
 	reachedEnd = false;	//set reached end as false, means that remaining game space still isn't fully explored
 	if (depth == 0)
 		return b->evaluate();
-	list<move*>::iterator iter = b->mlist.begin();
+	list<moveBoard*>::iterator iter = b->mlist.begin();
 
 	int localalpha = std::numeric_limits<int>::min();
 	int localbeta = std::numeric_limits<int>::max();
 
 	//max's turn
-	if (b->getTurn() == 'b')
-	{
-		for (; iter != b->mlist.end(); ++iter)
-		{
+	if (b->getTurn() == 'b'){
+		for (; iter != b->mlist.end(); ++iter){
 			//update the end time
 			time(&endTime);
 
@@ -219,8 +218,7 @@ int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta)
 			b->changeTurn();
 
 			//found best move
-			if (value > alpha)
-			{
+			if (value > alpha){
 				alpha = value;
 				if (depth == maxdepth)
 					tempBestM = (*iter);
@@ -246,13 +244,10 @@ int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta)
 	//returns beta instead of alpha
 	//tests value < beta instead of if value > alpha
 	//for finding best move
-	else
-	{
-		for (; iter != b->mlist.end(); ++iter)
-		{
+	else{
+		for (; iter != b->mlist.end(); ++iter){
 			time(&endTime);
-			if (difftime(endTime, startTime) >= (board::timeLimit - 1))
-			{
+			if (difftime(endTime, startTime) >= (board::timeLimit - 1)){
 				timeUp = true;
 				break;
 			}
@@ -263,8 +258,7 @@ int game::alphabeta(sptr<board>& b, int depth, int alpha, int beta)
 			b->changeTurn();
 
 			//found best move for min
-			if (value < beta)
-			{
+			if (value < beta){
 				beta = value;
 				if (depth == maxdepth)
 					tempBestM = (*iter);

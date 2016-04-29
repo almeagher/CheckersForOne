@@ -25,8 +25,7 @@ using std::string;
 //already been done when creating moves and jumps
 //called by createJumpMove in boardJumps.cpp
 //called by createMove in boardMove.cpp
-void board::convert(const int& x, const int& y, string& s)
-{
+void board::convert(const int& x, const int& y, string& s){
 	//assert(0 <= x && x <= 7 && 0 <= y && y <= 3);
 	 char c1 = '0' + x;
 	 char c2;
@@ -46,8 +45,7 @@ void board::convert(const int& x, const int& y, string& s)
 
 //used for printing out moves, converting the y coordinate in the matrix
 //to the coordinate on the expanded 8x8 board
-inline int board::convertY(const int& x, const int& y)
-{
+inline int board::convertY(const int& x, const int& y){
     if (x % 2 == 0)
         return (2*y + 1);
     else return (2*y);
@@ -58,14 +56,11 @@ inline int board::convertY(const int& x, const int& y)
 //i.e something like: XXX|   |XXX|   |XXX|   |XXX|
 //cases vary by whether or not it's an even or odd row
 //called by printBoard in boardPublic.cpp
-void board::printline(const int& i, const string& lineEven, const string& lineOdd)
-{
-	if (i % 2 == 0)
-	{
+void board::printline(const int& i, const string& lineEven, const string& lineOdd){
+	if (i % 2 == 0)	{
 		cout << lineEven << endl;
 		cout << "  " << i << " |XXXXX|";
-		for (int j = 0; j != 3; ++j)
-		{
+		for (int j = 0; j != 3; ++j){
 			cout << "  ";
 			printcolor(arr[i][j]);
 			cout << "  |XXXXX|";
@@ -75,8 +70,7 @@ void board::printline(const int& i, const string& lineEven, const string& lineOd
 		cout << "  |" << endl;;
 		cout << lineEven << endl;
 	}
-	else
-	{
+	else{
 		cout << lineOdd << endl;
 		cout << "  " << i << " |";
 		for (int j = 0; j != 3; ++j)
@@ -94,20 +88,17 @@ void board::printline(const int& i, const string& lineEven, const string& lineOd
 
 //function for printing a character in a different color
 //uses escape sequences to print out a color character
-void board::printcolor(const char& c)
-{
+void board::printcolor(const char& c){
 	if (c == 'e')
 		cout << ' ';
-	else if (c == 'r' || c == 'R')
-	{
+	else if (c == 'r' || c == 'R'){
 		//sets piece as magenta color
 		string default_console = "\033[0m";
 		string color = "\033[1;35m";
 		cout << color << c;
 		cout << default_console;
 	}
-	else
-	{
+	else{
 		//c is 'b' or 'B', sets pieces as cyan color
 		string default_console = "\033[0m";
 		string color = "\033[1;36m";
@@ -118,8 +109,7 @@ void board::printcolor(const char& c)
 
 //called by startup, which is found in board.h
 //prompts user to assign who is/ is not a computer
-void board::whoComputer(bool p1, bool p2)
-{
+void board::whoComputer(bool p1, bool p2){
 	if(p1)
 		board::isComputer[0] = true;
 	else if(!p1)
@@ -128,47 +118,6 @@ void board::whoComputer(bool p1, bool p2)
 		board::isComputer[1] = true;
 	else
 		board::isComputer[1] = false;
-	// bool b = true;
-	// char c = ' ';
-	// while (b)
-	// {
-		// cout << "Will player # 1 be a computer? (Y/N):" << endl;
-		// cin >> c;
-		// if (tolower(c) == 'y')
-		// {
-			// board::isComputer[0] = true;
-			// b = false;
-		// }
-		// else if (tolower(c) == 'n')
-		// {
-			// board::isComputer[0] = false;
-			// b = false;
-		// }
-	// }
-	// b = true;
-	// c = ' ';
-	// while (b)
-	// {
-		// cout << "Will player # 2 be a computer? (Y/N):" << endl;
-		// cin >> c;
-		// if (tolower(c) == 'y')
-		// {
-			// board::isComputer[1] = true;
-			// b = false;
-		// }
-		// else if (tolower(c) == 'n')
-		// {
-			// board::isComputer[1] = false;
-			// b = false;
-		// }
-	// }
-	// if (board::isComputer[0] == true || board::isComputer[1] == true)
-	// {
-		// cout << "Enter a time limit for the computer in seconds (3-60):" << endl;
-		//  >> timeLimit;
-		timeLimit = 3;
-		// if (timeLimit > 60 || timeLimit < 3)
-			// cin >> timeLimit;
-	// }
-}
 
+	timeLimit = 3;
+}

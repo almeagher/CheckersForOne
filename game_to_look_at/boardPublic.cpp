@@ -3,6 +3,7 @@
  *
  *      Author: Harrison
  */
+
 #include <typeinfo>
 #include <assert.h>
 #include "board.h"
@@ -14,6 +15,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -27,39 +29,58 @@ using std::tolower;
 //2 3 3 2 -1
 //is converted to (2, 3) -> (3, 2)
 //called by inputCommand
-std::vector<char> possible;
-void board::setLEDBoard(){
-	for(int i = 0; i < possible.size(); i+= 2){
-		ledBoard[possible[i]][possible[i+1]] = green;
+//RGB ledBoard[8][8];
+
+void board::setLEDBoard(vector<int> p, Driver& driver, Checkerboard &chk){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			ledBoard[i][j].r = 0;
+			ledBoard[i][j].g = 0;
+			ledBoard[i][j].b = 0;
+		}
 	}
-	driver.writeToLeds(ledBoard);
+	cout << endl;
+	for(int i = 0; i < p.size()-2; i+= 4){
+		ledBoard[p[i]][p[i+1]].r = 0;
+		ledBoard[p[i]][p[i+1]].g = 0;
+		ledBoard[p[i]][p[i+1]].b = 128;
+		ledBoard[p[i+2]][p[i+3]].r = 0;
+		ledBoard[p[i+2]][p[i+3]].g = 128;
+		ledBoard[p[i+2]][p[i+3]].b = 0;
+	}
+
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			cout << "(" << ledBoard[i][j].r << "," << ledBoard[i][j].g << "," << ledBoard[i][j].b << ") ";
+		}
+		cout << endl;
+	}
+	possible.clear();
+	//driver.writeToLeds(ledBoard);
 }
-void board::convertCommand(const string& s)
-{
-	
-	char positionR = ' ', positionC = ' ', possibleR = ' ', possibleC = ' ';
+void board::convertCommand(const string& s, Driver& driver, Checkerboard &chk){
+	int positionR = -4, positionC = -4, possibleR = -4, possibleC = -4;
 	string::const_iterator it = s.begin();
 	cout << "(" << (*it) << ", ";
-	positionR = (*it);
+	positionR = (*it) - '0';
 
 	it += 2;
 	cout << (*it) << ") ";
-	positionC = (*it);
+	positionC = (*it) - '0';
 	it += 2;
-	while (*it != '-')
-	{
+	while (*it != '-'){
 		cout << "-> (" << (*it) << ", ";
-		possibleR = (*it);
+		possibleR = (*it) - '0';
 		it += 2;
 		cout << (*it) << ") ";
-		possibleC = (*it);
+		possibleC = (*it) - '0';
 		cout << positionR << " "<< positionC << " " << possibleR << " " << possibleC;
-		// string x;
-		// x.append(positionR + " " + positionC + " " + possibleR + " " + possibleC);
+		
 		possible.push_back(positionR);
 		possible.push_back(positionC);
 		possible.push_back(possibleR);
 		possible.push_back(possibleC);
+			
 		it += 2;
 	}
 	
@@ -69,9 +90,8 @@ void board::convertCommand(const string& s)
 //for humans, ask for move
 //for computer, this function will never be called
 //instead another case will run in printEBoard which is found in boardPublic.cpp
-void board::inputCommand()
-{
-	printMoves();
+void board::inputCommand(Driver &driver, Checkerboard &chk){
+	printMoves(driver, chk);
 	string m;
 	cout << "Enter a sequence of integers indicating a move." << endl;
 	cout << "Each set of two integers represents a position." << endl;
@@ -85,31 +105,29 @@ void board::inputCommand()
 	//if the end of the list is reached
 	//input command again until one is matched
 	getline(cin, m);
+	chk.checkMoved();
 	
-	list<move*>::iterator it = mlist.begin();
-	while (it != mlist.end())
-	{
-		if ((*it)->command == m)
-		{
+	list<moveBoard*>::iterator it = mlist.begin();
+	while (it != mlist.end()){
+		if ((*it)->command == m){
 			cout << "You have chosen the move: ";
-			convertCommand((*it)->command);
+			convertCommand((*it)->command, driver, chk);
 			cout << endl;
 			break;
 		}
 		++it;
-		if (it == mlist.end())
-		{
+		if (it == mlist.end()){
 			getline(cin, m);
 			it = mlist.begin();
 		}
 	}
+	setLEDBoard(getPossible(), driver, chk);
 	makeMove(*it);
 }
 
 //print the board
 //called by printEBoard
-void board::printBoard()
-{
+void board::printBoard(){
 	cout << "Current board:" << endl;
 	cout << endl;
 	cout << "Player 1 is ";
@@ -125,8 +143,7 @@ void board::printBoard()
 	int count = 0;
 	cout << "       " << count;
 	++count;
-	while (count != 8)
-	{
+	while (count != 8){
 		cout << "     " << count++;
 	}
 	cout << " " << endl;
@@ -136,8 +153,7 @@ void board::printBoard()
 
 	//print the board
 	cout << linebreak << endl;
-	for (int i = 0; i != 8; ++i)
-	{
+	for (int i = 0; i != 8; ++i){
 		printline(i, lineEven, lineOdd);
 		if (i != 7)
 			cout << linebreak << endl;
@@ -150,19 +166,18 @@ void board::printBoard()
 
 //decides whose turn it is to move based on color
 //prints out all the legal moves for the current board
-void board::printMoves()
-{
+void board::printMoves(Driver &driver, Checkerboard &chk){
 	if (color == 'b')
 		cout << "Player 1 to move." << endl;
 	else cout << "Player 2 to move." << endl;
 	cout << "The legal moves are:" << endl;
-	list<move*>::const_iterator it = mlist.begin();
-	for (; it != mlist.end(); ++it)
-	{
+	list<moveBoard*>::const_iterator it = mlist.begin();
+	for (; it != mlist.end(); ++it){
 		cout << "Move: ";
-		convertCommand((*it)->command);
+		convertCommand((*it)->command, driver, chk);
 		cout << endl;
 	}
+	setLEDBoard(getPossible(), driver, chk);
 	cout << endl;
 }
 
@@ -170,10 +185,8 @@ void board::printMoves()
 //if there's any jumps, they are implemented
 //pieces are erased and subtracted from the total count if necessary
 //moves the piece from one position to another
-void board::makeMove(move* m)
-{
-	if (!m->jpoints.empty())
-	{
+void board::makeMove(moveBoard* m){
+	if (!m->jpoints.empty()){
 		list<jump*>::iterator it = m->jpoints.begin();
 		for (; it != m->jpoints.end(); ++it)
 			arr[(*it)->x][(*it)->y] = 'e';
@@ -196,12 +209,9 @@ void board::makeMove(move* m)
 //iterate through its list of jumps
 //add back all the characters that were temporarily deleted
 //add the jumping piece in the start position of the move
-void board::undoMove(move* m)
-{
-	if (!m->jpoints.empty())
-	{
-		for (list<jump*>::iterator it = m->jpoints.begin(); it != m->jpoints.end(); ++it)
-		{
+void board::undoMove(moveBoard* m){
+	if (!m->jpoints.empty()){
+		for (list<jump*>::iterator it = m->jpoints.begin(); it != m->jpoints.end(); ++it){
 			arr[(*it)->xs][(*it)->ys] = 'e';
 			arr[(*it)->x][(*it)->y] = (*it)->c;
 			arr[(*it)->xend][(*it)->yend] = 'e';
@@ -214,11 +224,9 @@ void board::undoMove(move* m)
 //gives a small bonus to losing player for being in a double corner
 //gives a smaller bonus to winning player for being on a diagonal close to the losing piece's corner
 //will help winning player force losing player out of a corner
-int board::cornerDiagonal(char losing, char winning)
-{
+int board::cornerDiagonal(char losing, char winning){
 	int c = 0;
-	if (tolower(arr[0][0]) == losing || tolower(arr[1][0]) == losing)
-	{
+	if (tolower(arr[0][0]) == losing || tolower(arr[1][0]) == losing){
 		c += 9;
 		if (tolower(arr[0][0]) == winning)
 			c -= 3;
@@ -233,8 +241,7 @@ int board::cornerDiagonal(char losing, char winning)
 		if (tolower(arr[3][1]) == winning)
 			c -= 1;
 	}
-	if (tolower(arr[6][3]) == losing || tolower(arr[7][3]) == losing)
-	{
+	if (tolower(arr[6][3]) == losing || tolower(arr[7][3]) == losing){
 		c += 9;
 		if (tolower(arr[4][2]) == winning)
 			c -= 1;
@@ -260,35 +267,29 @@ int board::cornerDiagonal(char losing, char winning)
 //cc is a piece count difference
 //dd is a measurement near end game, double corners add a bonus for losing player
 //ee is pseudo-random in the case that multiple moves tie for best
-int board::evaluate()
-{
+int board::evaluate(){
 	int a1 = 0, a2 = 0, b = 0, c = 0, d = 0;
 	for (int i = 0; i != 8; ++i)
-		for (int j = 0; j != 4; ++j)
-		{
-			if (arr[i][j] == 'b')
-			{
+		for (int j = 0; j != 4; ++j){
+			if (arr[i][j] == 'b'){
 				a1 += 2;
 				if (i == 0)
 					b += 9;
 				else b += i;
 				c += 1;
 			}
-			else if (arr[i][j] == 'r')
-			{
+			else if (arr[i][j] == 'r'){
 				a2 -=2;
 				if (i == 7)
 					b -= 9;
 				else b -= (7 - i);
 				c -= 1;
 			}
-			else if (arr[i][j] == 'B')
-			{
+			else if (arr[i][j] == 'B'){
 				a1 += 3;
 				c += 1;
 			}
-			else if (arr[i][j] == 'R')
-			{
+			else if (arr[i][j] == 'R'){
 				a2 -= 3;
 				c -= 1;
 			}
@@ -309,13 +310,8 @@ int board::evaluate()
 }
 
 //determines whether or not players will be a computer calls modifyBoard
-void board::startup(bool p1, bool p2)
-{
+void board::startup(bool p1, bool p2){
 	//reset the board
 	reset();
 	whoComputer(p1, p2);
 }
-
-
-
-

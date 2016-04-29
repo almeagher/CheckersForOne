@@ -1,22 +1,23 @@
 #include <iostream>
 #include <vector>
 #include "Checkerboard.h"
+#include "board.h"
 
 using namespace std;
 
 Checkerboard::Checkerboard(){
 	
 	char black = 'b';
-	char red = 'r';
+	char redPiece = 'r';
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			board [r][c] = '0';
+			currBoard [r][c] = 0;
 		}
 	}
 	
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			ledBoard [r][c] = blank;
+			//ledBoard [r][c] = blank;
 		}
 	}
 	
@@ -24,14 +25,14 @@ Checkerboard::Checkerboard(){
 		for(int c = 0; c < 8; c++){
 			if((r+c)%2 != 0 && r <=2)
 				// prevBoard[r][c] = black;
-				prevBoard[r][c] = '1';
+				prevBoard[r][c] = 1;
 			else if((r+c)%2 != 0 && r > 1 && r <= 4)
-				prevBoard[r][c] = '0';
+				prevBoard[r][c] = 0;
 			else if((r+c)%2 != 0 && r > 4 && r <= 7)
-				// prevBoard[r][c]=red;
-				prevBoard[r][c]= '1';
+				// prevBoard[r][c]=redPiece;
+				prevBoard[r][c]= 1;
 			else
-				prevBoard[r][c] = '0';
+				prevBoard[r][c] = 0;
 		}
 	}
 }
@@ -42,38 +43,34 @@ void Checkerboard:: printBoard(){
 	for(int r = 0; r < 8; r++){
 		cout << r << " | ";
 		for(int c = 0; c < 8; c++){
-			cout << board [r][c] << " ";
+			cout << currBoard [r][c] << " ";
 		}
 		cout << endl;
 	}
 }
 
-void Checkerboard:: setPlayers(bool p1, bool p2){
-	checkers.playTheGame(p1, p2);
-	// 
+// void Checkerboard:: setPlayers(bool p1, bool p2, Driver &driver){
+	// checkers.playTheGame(p1, p2,driver);
+	// // 
 	
-}
+// }
 
 void Checkerboard:: printLED(){
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			cout << "(" << ledBoard[r][c].r << "," << ledBoard[r][c].g << "," << ledBoard[r][c].b << ") ";
+			//cout << "(" << ledBoard[r][c].r << "," << ledBoard[r][c].g << "," << ledBoard[r][c].b << ") ";
 		}
 		cout << endl;
 	}
 }
 
-void Checkerboard:: getNewBoard(char newBoard[8][8]){
+void Checkerboard:: getNewBoard(int newBoard[8][8]){
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			board[r][c] = newBoard[r][c];
+			currBoard[r][c] = newBoard[r][c];
 		}
 	}
 }
-
-// char Checkerboard:: getPieceType(int prevCoorR, int prevCoorC){
-	// return prevBoard[prevCoorR][prevCoorC];
-// }
 
 void Checkerboard:: showPossibleMoves(int r, int c){
 	
@@ -86,65 +83,27 @@ bool Checkerboard:: checkThinking(int r, int c){
 	return false;
 }
 
-// bool Checkerboard:: checkMovedLeft(int r, int c){
-	// // if top player
-	// if(board[r][c] == prevBoard[r-1][c+1] && board[r-1][c+1] == 0){
-		// // newPieceType = getPieceType((r-1), (c+1));
-		// cout << "Moved " << r-1 << " " << c+1 << " to " << r << " " << c << endl;
-		// return true;
-	// }
-		
-	// // if bottom player
-	// else if(board[r][c] == prevBoard[r+1][c+1] && board[r+1][c+1] == 0){
-		// // newPieceType = getPieceType((r+1), (c+1));
-		// return true;
-	// }
-		
-	// else
-		// return false;
-	
-	// return false;
-// }
-
-// bool Checkerboard:: checkMovedRight(int r, int c){
-	// // if top player
-	// if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
-		// // newPieceType = getPieceType((r-1), (c-1));
-		// return true;
-	// }
-		
-	// // if bottom player
-	// else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
-		// // newPieceType = getPieceType((r+1), (c-1));
-		// return true;
-	// }
-		
-	// else
-		// return false;
-	// return false;
-// }
-
-
 void Checkerboard:: checkMoved(){
 	coord movedFrom {-2, -2};
 	coord movedTo {-2, -2};
-	cout << "Diff array" << endl;
 	int diffArray[8][8];
-	bool pieceMoved = false;
+	bool alreadyMoved = false;
+	
+	cout << "Diff array" << endl;
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			diffArray[r][c] = board[r][c] - prevBoard[r][c];
+			diffArray[r][c] = currBoard[r][c] - prevBoard[r][c];
 			cout << diffArray[r][c] << " ";
-			if(board[r][c] - prevBoard[r][c] == -1 && pieceMoved == false){
+			if(currBoard[r][c] - prevBoard[r][c] == -1 && alreadyMoved == false){
 				movedFrom = {r, c};
-				pieceMoved = true;
+				alreadyMoved = true;
 			}
-			else if(board[r][c] - prevBoard[r][c] == -1 && pieceMoved == true){
+			else if(currBoard[r][c] - prevBoard[r][c] == -1 && alreadyMoved == true){
 				cout << "you moved two different pieces at once" << endl;
-				ledBoard[movedFrom.x][movedFrom.y] = error;
-				ledBoard[r][c] = error;
+				//ledBoard[movedFrom.x][movedFrom.y] = redLed;
+				//ledBoard[r][c] = redLed;
 			}
-			if(board[r][c] - prevBoard[r][c] == 1 && pieceMoved == false){
+			if(currBoard[r][c] - prevBoard[r][c] == 1 && alreadyMoved == false){
 				movedTo = {r, c};
 			}
 		}
@@ -152,30 +111,35 @@ void Checkerboard:: checkMoved(){
 	}
 	
 	if(movedFrom.x == -2 && movedFrom.y == -2 && movedTo.x == -2 && movedTo.y == -2){
-		cout << "didn't move" << endl;
+		cout << "put piece down in same spot" << endl;
 	}
 	
 	else if(movedTo.x == -2 && movedTo.y == -2){
 		cout << "transition mode" << endl;
 		showPossibleMoves(movedFrom.x, movedFrom.y);
 	}
-	else if(pieceMoved == true){
+	else if(alreadyMoved == true){
 		cout << "error state" << endl;
 	}
 	else{
 		cout << movedFrom.x << " " << movedFrom.y << " -> " << movedTo.x << " " << movedTo.y << endl;
+		pieceMoved = to_string(movedFrom.x) + " " + to_string(movedFrom.y) + " " + to_string(movedTo.x) + " " + to_string(movedTo.y) + " -1";
 		// checkValidMove();
 	}
 }
 
+string Checkerboard:: getPieceMoved(){
+	return pieceMoved;
+}
+
 // bool Checkerboard:: checkValidMove(char oldPieceType, int r, int c){
-	// if(board[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
+	// if(currBoard[r][c] == prevBoard[r-1][c-1] && board[r-1][c-1] == 0){
 		// newPieceType = getPieceType((r-1), (c-1));
 		// return true;
 	// }
 		
 	// // if bottom player
-	// else if(board[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
+	// else if(currBoard[r][c] == prevBoard[r+1][c-1] && board[r+1][c-1] == 0){
 		// newPieceType = getPieceType((r+1), (c-1));
 		// return true;
 	// }
@@ -207,7 +171,7 @@ void Checkerboard:: errorState(){
 		// for(int c = 0; c < 8; c++){
 			// delete board[r][c];
 		// }
-		// delete[] board[r];
+		// delete[] currBoard[r];
 	// }
-	// delete[] board;
+	// delete[] currBoard;
 // }

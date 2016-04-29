@@ -9,15 +9,13 @@
 
 #include "board.h"
 #include "time.h"
-// #include "Driver.cpp"
 
 //template for basic smart pointer
 //used to wrap pointers to board
 //makes memory freeing easy to handle
 //in alpha beta searching and creating new temporary boards
 template <class T>
-class sptr
-{
+class sptr{
 private:
 	T* pData;
 public:
@@ -27,20 +25,12 @@ public:
 	T* operator->() {return pData;}
 };
 
-class game
-{
+class game{
 	//black shall be max
 	//red shall be min
-	typedef struct RGB {
-		unsigned int r;
-		unsigned int g;
-		unsigned int b;
-	} RGB;
-	RGB green = {0, 255, 0};
-	RGB red = {255, 0, 0};
-	// Driver driver;
+
 	
-	RGB lightBoard[8][8];
+	//RGB lightBoard[8][8];
 	//maintains a pointer to the current board
 	sptr<board> currentB;
 
@@ -49,10 +39,10 @@ class game
 	static const int maxIterDepth;
 
 	//best move from last complete alpha-beta search
-	move* bestM;
+	moveBoard* bestM;
 
 	//temporary best move for current alpha-beta search
-	move* tempBestM;
+	moveBoard* tempBestM;
 
 	//keeps track of the max depth of the current alpha-beta search
 	int maxdepth;
@@ -90,20 +80,20 @@ class game
 	//if it's a computer's turn, it starts the alpha-beta search and
 	//selects the computer's move
 	//it is continuously called when gameOver is false
-	void printGame();
+	void printGame(Driver &driver, Checkerboard &chk);
 
 	//for computer's turn
 	//prints depth searched up to, whether or not time ran out, and computer's move
-	void outputMessage();
+	void outputMessage(Driver &driver, Checkerboard &chk);
 
 	//everything related to the computer's turn
-	void computerTurn();
+	void computerTurn(Driver &driver, Checkerboard &chk);
 
 	//alpha beta searched called by computerTurn
 	int alphabeta(sptr<board>&, int, int, int);
 
 	//message that prints when the game is over
-	void endMessage();
+	void endMessage(Driver &driver);
 
 public:
 
@@ -112,7 +102,7 @@ public:
 
 	//calls startup
 	//calls appropriate functions to play checkers
-	void playTheGame(bool p1, bool p2);
+	void playTheGame(bool p1, bool p2, Driver &driver, Checkerboard &chk);
 
 };
 

@@ -25,7 +25,7 @@ static uint8_t gamma_table_blue[256];
 int lpd8806_init(lpd8806_buffer *buf, int leds) {
   buf->leds = leds;
   buf->size = (leds+3)*sizeof(lpd8806_color);
-  buf->buffer = (lpd8806_color*)malloc(buf->size);
+  buf->buffer = new lpd8806_color[buf->size];
   if(buf->buffer==NULL) {
     return -1;
   }

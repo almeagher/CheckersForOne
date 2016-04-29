@@ -1,20 +1,11 @@
 #include <cstdlib>
 #include "Checkerboard.h"
 #include <iostream>
+#include "Driver.h"
+#include "game.h"
 
 using namespace std;
-
-void numOfPlayers(bool aiPlayer){
-	if(aiPlayer == true){
-		// human vs computer
-		// human starts
-		// human red pieces
-	}
-	else{
-		// human vs human 
-		// player using red pieces goes first
-	}
-}
+//extern Driver driver;
 
 void endEarly(bool endEarly){
 	if(endEarly == true){
@@ -26,21 +17,40 @@ void endEarly(bool endEarly){
 int main(int argc, char** argv) {
 	bool player1 = true;
 	bool player2 = false;
-	Checkerboard* cb = new Checkerboard;
-	cb->setPlayers(player1, player2);
-	char test[8][8] = {{'0'}};
 	
+	Checkerboard cb = Checkerboard();
+	long a = 0;
+	Driver driver = Driver();
+	//player1 = driver.isPlayer1Comp();
+	//player2 = driver.isPlayer2Comp();
+	game checkers;
+	checkers.playTheGame(player1, player2, driver, cb);
+	// cb->setPlayers(player1, player2, driver);
+	
+	/*RGB ledBoard[8][8];
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-			cin >> test[i][j];
+			ledBoard[i][j].r = 0;
+			ledBoard[i][j].g = 0;
+			ledBoard[i][j].b = 0;
 		}
 	}
-
 	
-	cb->getNewBoard(test);
-	cb->checkMoved();
-	cb->printBoard();
-	cb->printLED();
+	driver.writeToLeds(ledBoard);
+	*/
+	
+	//char test[8][8] = {{'0'}};
+	
+	// for(int i = 0; i < 8; i++){
+		// for(int j = 0; j < 8; j++){
+		// cin >> test[i][j];
+		// }
+	// }
+
+	// driver.scan(); 
+	// cb->getNewBoard(driver.table);
+	// cb->printBoard();
+	// cb->printLED();
    return 0;
 }
 

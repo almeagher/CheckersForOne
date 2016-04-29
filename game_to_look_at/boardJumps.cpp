@@ -10,6 +10,7 @@
 #include <cctype>
 #include <list>
 
+
 using std::cout;
 using std::endl;
 using std::list;
@@ -81,7 +82,7 @@ void board::createJumpMove(list<jump*>& jlist)
 		{
 			if ((*it)->noNext)
 			{
-				move* m = new move((*it)->jumpingPiece, -1, -1, -1, -1);
+				moveBoard* m = new moveBoard((*it)->jumpingPiece, -1, -1, -1, -1);
 				jump* jp = (*it);
 				while (jp != NULL)
 				{

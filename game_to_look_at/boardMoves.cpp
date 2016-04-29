@@ -10,6 +10,7 @@
 #include <iostream>
 #include <list>
 
+
 using std::cout;
 using std::endl;
 using std::list;
@@ -65,7 +66,7 @@ void board::createMove(const int& xi,const int& yi, int xf, int yf)
 {
 	if (isValidPos(xf, yf) && arr[xf][yf] == 'e')
 	{
-		move* m = new move(arr[xi][yi], xi, yi, xf, yf);
+		moveBoard* m = new moveBoard(arr[xi][yi], xi, yi, xf, yf);
 		mlist.push_back(m);
 		convert(xi, yi, m->command);
 		convert(xf, yf, m->command);

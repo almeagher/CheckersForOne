@@ -1,3 +1,5 @@
+#ifndef DRIVER_H_
+#define DRIVER_H_
 
 #include "lpd8806led.h"
 #include <fcntl.h>
@@ -16,6 +18,12 @@ typedef struct RGB {
 	int b;
 } RGB;
 
+//extern RGB ledBoard[8][8];
+
+
+
+
+
 class Driver{
 	
 	private:
@@ -23,12 +31,14 @@ class Driver{
     int leds; /* 75 LEDs in te strand */
   lpd8806_buffer buf;      /* Memory buffer for pixel values */
   RGB temp_color;
-  int table[8][8];
+  RGB pre_array[8][8];
+ 
 	
 	
 	
 	public:
 		Driver();
+		Driver(int a);
 		
 		~Driver();
 		
@@ -39,10 +49,10 @@ class Driver{
 		void clear_led();
 		
 		void setup_pcf();
-		int scan();
+		void scan();
 		void printint();
-		int[][] getPositions();
-
+		int table[8][8];
+		bool equal(RGB a, RGB b);
 		//vector<vector<bool>> readOccupation(); 
 	//	void waitForChange(int timeOutMS);
 		//void writeToLeds(RGB rgbp[8][8]);
@@ -50,3 +60,4 @@ class Driver{
 		//vector<vector<bool>> occupiedBoard();
 
 };
+#endif
