@@ -25,8 +25,8 @@ class Checkerboard{
 public:
 	bool isEnd = false;
 	string pieceMoved;
-	// void setPlayers(bool p1, bool p2, Driver &driver);
-	
+	coord fromPiece;
+	//bool validMove = false;
 	int prevBoard[8][8];
 	int currBoard[8][8];
 	//RGB ledBoard[8][8];
@@ -43,6 +43,10 @@ public:
 	void changeBoard();
 	
 	void getNewBoard(int newBoard[8][8]);
+	coord getFromPiece();
+	void setFromPiece(int r, int c);
+	//bool checkIfValidMove();
+	//void setValidMoveVar(bool value);
 	
 	bool checkMoved(Driver &driver, vector<int> p);
 	string getPieceMoved();

@@ -129,11 +129,13 @@ void board::inputCommand(Driver &driver, Checkerboard &chk){
 		if (it == mlist.end()){
 			while(chk.checkMoved(driver, getPossible()) == false){
 				cout << "not a valid move" << endl;
+				//chk.setValidMoveVar(false);
 			}
 			
 			m = chk.getPieceMoved();
 			it = mlist.begin();
 		}
+		
 	}
 	setLEDBoard(getPossible(), driver, chk);
 	makeMove(*it);

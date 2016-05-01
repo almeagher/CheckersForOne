@@ -57,12 +57,6 @@ void Checkerboard:: printBoard(){
 	}
 }
 
-// void Checkerboard:: setPlayers(bool p1, bool p2, Driver &driver){
-	// checkers.playTheGame(p1, p2,driver);
-	// // 
-	
-// }
-
 void Checkerboard:: printLED(){
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
@@ -89,6 +83,16 @@ bool Checkerboard:: checkThinking(int r, int c){
 		// return true;
 	// }
 	return false;
+}
+
+coord Checkerboard:: getFromPiece(){
+	return fromPiece;
+}
+
+void Checkerboard:: setFromPiece(int r, int c){
+	fromPiece.x = r; 
+	fromPiece.y = c; 
+	//fromPiece = {r, c};
 }
 
 bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
@@ -132,7 +136,6 @@ bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
 			if(currBoard[r][c] - prevBoard[r][c] == 1){
 				movedFrom = {r, c};
 				cout << movedFrom.x << movedFrom.y << endl;
-				//cout << "moved" << endl;
 			}
 			/*else if(currBoard[r][c] - prevBoard[r][c] == 1 && alreadyMoved == true){
 				cout << "you moved two different pieces at once" << endl;
@@ -145,7 +148,6 @@ bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
 				//alreadyMoved = true;
 			}
 		}
-		//cout << endl;
 	}
 	
 	if(movedFrom.x == -2 && movedFrom.y == -2 && movedTo.x == -2 && movedTo.y == -2){
@@ -155,7 +157,7 @@ bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
 	
 	else if(movedTo.x == -2 && movedTo.y == -2){
 		cout << "transition mode" << endl;
-		
+		bool validMove = false;
 		for(int i = 0; i < p.size()-2; i+= 4){
 			if(p[i] == movedFrom.x && p[i+1] == movedFrom.y){
 				ledBoard[p[i]][p[i+1]].r = 0;
@@ -164,13 +166,18 @@ bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
 				ledBoard[p[i+2]][p[i+3]].r = 0;
 				ledBoard[p[i+2]][p[i+3]].g = 128;
 				ledBoard[p[i+2]][p[i+3]].b = 0;
+				validMove = true;
 			}
+		}
+		if(validMove == false){
+			ledBoard[movedFrom.x][movedFrom.y].r = 128;
+			ledBoard[movedFrom.x][movedFrom.y].g = 0;
+			ledBoard[movedFrom.x][movedFrom.y].b = 0;
+			driver.writeToLeds(ledBoard);	
 		}
 		
 		driver.writeToLeds(ledBoard);
-		return false;
-		//showPossibleMoves(movedFrom.x, movedFrom.y);
-		
+		return false;		
 	}
 	/*else if(alreadyMoved == true){
 		cout << "error state" << endl;
@@ -178,9 +185,25 @@ bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
 	else{
 		cout << movedFrom.x << " " << movedFrom.y << " -> " << movedTo.x << " " << movedTo.y << endl;
 		pieceMoved = to_string(movedFrom.x) + " " + to_string(movedFrom.y) + " " + to_string(movedTo.x) + " " + to_string(movedTo.y) + " -1";
+		bool validMove = false;
+		for(int i = 0; i < p.size()-2; i+= 4){
+			if(p[i+2] == movedTo.x && p[i+3] == movedTo.y){
+				validMove = true;
+				return true;
+			}
+		}
+		if(validMove == false){
+			ledBoard[movedFrom.x][movedFrom.y].r = 0;
+			ledBoard[movedFrom.x][movedFrom.y].g = 0;
+			ledBoard[movedFrom.x][movedFrom.y].b = 128;
+			ledBoard[movedTo.x][movedTo.y].r = 128;
+			ledBoard[movedTo.x][movedTo.y].g = 0;
+			ledBoard[movedTo.x][movedTo.y].b = 0;
+			driver.writeToLeds(ledBoard);	
+			return false;
+		}
 		
-		
-		return true;
+		return false;
 		// checkValidMove();
 	}
 	//return false;
