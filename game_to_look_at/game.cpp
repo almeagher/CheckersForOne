@@ -139,6 +139,7 @@ void game::outputMessage(Driver &driver, Checkerboard &chk){
 	string compMove = to_string(p[0]) + " " + to_string(p[1]) + " " + to_string(p[2]) + " " + to_string(p[3]);
 	cout <<"Comp moved: " << compMove << endl;
 	board::setLEDBoard(board::getPossible(), driver, chk);
+	
 	cout << endl;
 	
 	

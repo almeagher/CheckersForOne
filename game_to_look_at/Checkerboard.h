@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-
+#include "Driver.h"
 //#include "board.h"
 //#include "game.h"
 
@@ -36,12 +36,15 @@ public:
 	//RGB blank = {0,0, 0};
 
 	Checkerboard();
+	Checkerboard(int b[8][8]);
 	void printBoard();
 	void printLED();
 	
+	void changeBoard();
+	
 	void getNewBoard(int newBoard[8][8]);
 	
-	void checkMoved();
+	bool checkMoved(Driver &driver, vector<int> p);
 	string getPieceMoved();
 	void showPossibleMoves(int r, int c);
 	bool checkThinking(int r, int c);

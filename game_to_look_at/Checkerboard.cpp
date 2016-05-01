@@ -37,6 +37,14 @@ Checkerboard::Checkerboard(){
 	}
 }
 
+Checkerboard:: Checkerboard(int  b[8][8]){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			prevBoard[i][j] = b[i][j];
+		}
+	}
+}
+
 void Checkerboard:: printBoard(){
 	cout << "    0 1 2 3 4 5 6 7" << endl;
 	cout << "-------------------" << endl;
@@ -60,7 +68,7 @@ void Checkerboard:: printLED(){
 		for(int c = 0; c < 8; c++){
 			//cout << "(" << ledBoard[r][c].r << "," << ledBoard[r][c].g << "," << ledBoard[r][c].b << ") ";
 		}
-		cout << endl;
+		//cout << endl;
 	}
 }
 
@@ -83,53 +91,113 @@ bool Checkerboard:: checkThinking(int r, int c){
 	return false;
 }
 
-void Checkerboard:: checkMoved(){
+bool Checkerboard:: checkMoved(Driver &driver, vector<int> p){
+	driver.scan();
+	getNewBoard(driver.table);
+	
 	coord movedFrom {-2, -2};
 	coord movedTo {-2, -2};
 	int diffArray[8][8];
 	bool alreadyMoved = false;
 	
-	cout << "Diff array" << endl;
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			ledBoard[i][j].r = 0;
+			ledBoard[i][j].g = 0;
+			ledBoard[i][j].b = 0;
+		}
+	}
+	driver.writeToLeds(ledBoard);
+
+	/*
+	cout << "Current board" << endl;
 	for(int r = 0; r < 8; r++){
 		for(int c = 0; c < 8; c++){
-			diffArray[r][c] = currBoard[r][c] - prevBoard[r][c];
-			cout << diffArray[r][c] << " ";
-			if(currBoard[r][c] - prevBoard[r][c] == -1 && alreadyMoved == false){
-				movedFrom = {r, c};
-				alreadyMoved = true;
-			}
-			else if(currBoard[r][c] - prevBoard[r][c] == -1 && alreadyMoved == true){
-				cout << "you moved two different pieces at once" << endl;
-				//ledBoard[movedFrom.x][movedFrom.y] = redLed;
-				//ledBoard[r][c] = redLed;
-			}
-			if(currBoard[r][c] - prevBoard[r][c] == 1 && alreadyMoved == false){
-				movedTo = {r, c};
-			}
+			cout << currBoard[r][c] << " ";
 		}
 		cout << endl;
 	}
 	
+	cout << "PrevBoard board" << endl;
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			cout << prevBoard[r][c] << " ";
+		}
+		cout << endl;
+	}*/
+	
+	cout << endl;
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			if(currBoard[r][c] - prevBoard[r][c] == 1){
+				movedFrom = {r, c};
+				cout << movedFrom.x << movedFrom.y << endl;
+				//cout << "moved" << endl;
+			}
+			/*else if(currBoard[r][c] - prevBoard[r][c] == 1 && alreadyMoved == true){
+				cout << "you moved two different pieces at once" << endl;
+				cout << movedFrom.x << movedFrom.y << movedTo.x << movedTo.y << endl;
+				ledBoard[movedFrom.x][movedFrom.y] = redLed;
+				ledBoard[r][c] = redLed;
+			}*/
+			else if(currBoard[r][c] - prevBoard[r][c] == -1){
+				movedTo = {r, c};
+				//alreadyMoved = true;
+			}
+		}
+		//cout << endl;
+	}
+	
 	if(movedFrom.x == -2 && movedFrom.y == -2 && movedTo.x == -2 && movedTo.y == -2){
-		cout << "put piece down in same spot" << endl;
+		//cout << "put piece down in same spot" << endl;
+		return false;
 	}
 	
 	else if(movedTo.x == -2 && movedTo.y == -2){
 		cout << "transition mode" << endl;
-		showPossibleMoves(movedFrom.x, movedFrom.y);
+		
+		for(int i = 0; i < p.size()-2; i+= 4){
+			if(p[i] == movedFrom.x && p[i+1] == movedFrom.y){
+				ledBoard[p[i]][p[i+1]].r = 0;
+				ledBoard[p[i]][p[i+1]].g = 0;
+				ledBoard[p[i]][p[i+1]].b = 128;
+				ledBoard[p[i+2]][p[i+3]].r = 0;
+				ledBoard[p[i+2]][p[i+3]].g = 128;
+				ledBoard[p[i+2]][p[i+3]].b = 0;
+			}
+		}
+		
+		driver.writeToLeds(ledBoard);
+		return false;
+		//showPossibleMoves(movedFrom.x, movedFrom.y);
+		
 	}
-	else if(alreadyMoved == true){
+	/*else if(alreadyMoved == true){
 		cout << "error state" << endl;
-	}
+	}*/
 	else{
 		cout << movedFrom.x << " " << movedFrom.y << " -> " << movedTo.x << " " << movedTo.y << endl;
 		pieceMoved = to_string(movedFrom.x) + " " + to_string(movedFrom.y) + " " + to_string(movedTo.x) + " " + to_string(movedTo.y) + " -1";
+		
+		
+		return true;
 		// checkValidMove();
+	}
+	//return false;
+}
+
+void Checkerboard:: changeBoard(){
+	for(int r = 0; r < 8; r++){
+		for(int c = 0; c < 8; c++){
+			prevBoard[r][c] = currBoard[r][c];
+		}
 	}
 }
 
 string Checkerboard:: getPieceMoved(){
-	return pieceMoved;
+	string p = pieceMoved;
+	pieceMoved = "";
+	return p;
 }
 
 // bool Checkerboard:: checkValidMove(char oldPieceType, int r, int c){

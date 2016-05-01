@@ -53,6 +53,9 @@ class Driver{
 		void printint();
 		int table[8][8];
 		bool equal(RGB a, RGB b);
+		bool isPlayer1Comp();
+		bool isPlayer2Comp();
+		
 		//vector<vector<bool>> readOccupation(); 
 	//	void waitForChange(int timeOutMS);
 		//void writeToLeds(RGB rgbp[8][8]);

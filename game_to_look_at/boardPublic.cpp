@@ -56,7 +56,7 @@ void board::setLEDBoard(vector<int> p, Driver& driver, Checkerboard &chk){
 		cout << endl;
 	}
 	possible.clear();
-	//driver.writeToLeds(ledBoard);
+	driver.writeToLeds(ledBoard);
 }
 void board::convertCommand(const string& s, Driver& driver, Checkerboard &chk){
 	int positionR = -4, positionC = -4, possibleR = -4, possibleC = -4;
@@ -99,25 +99,39 @@ void board::inputCommand(Driver &driver, Checkerboard &chk){
 	cout << "For example: 2 3 3 2 -1" << endl;
 	cout <<	"	represents (2,3) -> (3,2)" << endl;
 	cout << "Enter move: ";
-
+	
 	//enter a command
 	//try to match the command with one in the list of moves
 	//if the end of the list is reached
 	//input command again until one is matched
-	getline(cin, m);
-	chk.checkMoved();
+	//getline(cin, m);
+	
+	
+	while(chk.checkMoved(driver, getPossible()) == false){
+		
+	}
+	
+	m = chk.getPieceMoved();
+	
 	
 	list<moveBoard*>::iterator it = mlist.begin();
 	while (it != mlist.end()){
-		if ((*it)->command == m){
+				
+		if((*it)->command == m){
 			cout << "You have chosen the move: ";
 			convertCommand((*it)->command, driver, chk);
 			cout << endl;
+			chk.changeBoard();
 			break;
+			
 		}
 		++it;
 		if (it == mlist.end()){
-			getline(cin, m);
+			while(chk.checkMoved(driver, getPossible()) == false){
+				cout << "not a valid move" << endl;
+			}
+			
+			m = chk.getPieceMoved();
 			it = mlist.begin();
 		}
 	}
@@ -177,7 +191,7 @@ void board::printMoves(Driver &driver, Checkerboard &chk){
 		convertCommand((*it)->command, driver, chk);
 		cout << endl;
 	}
-	setLEDBoard(getPossible(), driver, chk);
+	//setLEDBoard(getPossible(), driver, chk);
 	cout << endl;
 }
 
