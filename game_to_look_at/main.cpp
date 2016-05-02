@@ -23,12 +23,14 @@ int main(int argc, char** argv) {
 	
 	RGB ledBoard[8][8];
 	//driver.clear_led();
-	
+	while(cb.canStart(driver) == false){
+		
+	}
 	bool player1 = driver.isPlayer1Comp();
 	bool player2 = driver.isPlayer2Comp();
 	game checkers;
 	checkers.playTheGame(player1, player2, driver, cb);
 	
-   return 0;
+	return 0;
 }
 

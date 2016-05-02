@@ -162,7 +162,7 @@ void Driver::setup_pcf()
 }
 
 bool Driver:: isPlayer1Comp(){
-	return false;
+	return true;
 }
 
 bool Driver:: isPlayer2Comp(){

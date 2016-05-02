@@ -22,7 +22,7 @@ bool board::isComputer[2];
 
 int board::timeLimit = 0;
 
-vector<int> possible;
+vector<vector<int>> possible;
 RGB ledBoard[8][8] = {{blank}};
 //frees the memory allocated on the heap for each jump pointer
 //avoids double freeing of memory by keeping track of the
@@ -85,6 +85,20 @@ void board::reset(){
 			arr[i][j] = 'r';
 }
 
-vector<int> board::getPossible(){
+vector<vector<int>> board::getPossible(){
 	return possible;
+}
+
+void board:: clearPossible(){
+	possible.clear();
+}
+
+void board:: printPossible(){
+	cout << "Possible:: " << endl;
+	for(int i = 0; i < possible.size(); i++){
+		for(int j = 0; j < possible[i].size(); j++){
+			cout << possible[i][j] << " ";
+		}
+		cout << endl;
+	}
 }

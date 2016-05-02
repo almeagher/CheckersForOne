@@ -14,7 +14,11 @@
 #include <list>
 #include "board.h"
 #include <time.h>
+#include <sstream>
+#include <string>
 
+using std::stringstream;
+using std::string;
 
 using std::cin;
 using std::cout;
@@ -134,11 +138,30 @@ void game::computerTurn(Driver &driver, Checkerboard &chk){
 void game::outputMessage(Driver &driver, Checkerboard &chk){
 	currentB->makeMove(bestM);
 	cout << "The chosen move is: ";
+	board:: clearPossible();
 	board::convertCommand(bestM->command, driver, chk);
-	vector<int> p = (board:: getPossible());
-	string compMove = to_string(p[0]) + " " + to_string(p[1]) + " " + to_string(p[2]) + " " + to_string(p[3]);
-	cout <<"Comp moved: " << compMove << endl;
-	board::setLEDBoard(board::getPossible(), driver, chk);
+	
+	cout << "Comp moved: ";
+	vector<vector<int>> p = (board:: getPossible());
+	
+	ledBoard[p[0][0]][p[0][1]].r = 0;
+	ledBoard[p[0][0]][p[0][1]].g = 0;
+	ledBoard[p[0][0]][p[0][1]].b = 128;
+	ledBoard[p[0][2]][p[0][3]].r = 0;
+	ledBoard[p[0][2]][p[0][3]].g = 128;
+	ledBoard[p[0][2]][p[0][3]].b = 0;
+	driver.writeToLeds(ledBoard);
+	coord movedFrom = {p[0][0], p[0][1]};
+	coord movedTo = {p[0][2], p[0][3]};
+	
+	cout << movedFrom.x << movedFrom.y << movedTo.x << movedTo.y << endl;
+	while(chk.waitUntilMoved(driver, movedFrom, movedTo) == false){
+		
+	}
+	//string compMove = to_string(p[0]) + " " + to_string(p[1]) + " " + to_string(p[2]) + " " + to_string(p[3]);
+	//cout <<"Comp moved: " << compMove << endl;
+	//board::setLEDBoard(board::getPossible(), driver, chk);
+	board:: clearPossible();
 	
 	cout << endl;
 	

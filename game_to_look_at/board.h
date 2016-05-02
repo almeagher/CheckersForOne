@@ -20,7 +20,7 @@ const RGB redLed = {128, 0, 0};
 const RGB greenLed = {0, 128, 0};
 const RGB blank = {0, 0, 0};
 
-extern std::vector<int> possible;
+extern std::vector<vector<int>> possible;
 extern RGB ledBoard[8][8];
 
 class jump{
@@ -118,9 +118,11 @@ class board{
 	//default initialized to false since it's a static array
 	static bool isComputer[2];
 	
-	static vector<int> getPossible();
+	static vector<vector<int>> getPossible();
+	static void clearPossible();
+	static void printPossible();
 	static vector<vector<RGB>> getLEDBoard();
-	static void setLEDBoard(vector<int> p, Driver &driver, Checkerboard &chk);
+	static void setLEDBoard(vector<vector<int>> p, Driver &driver, Checkerboard &chk);
 	//---------------------------------------------------------------------------------
 	//functions for board creation, found in board.cpp:
 	//---------------------------------------------------------------------------------

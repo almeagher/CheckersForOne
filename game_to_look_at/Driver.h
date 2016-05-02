@@ -20,21 +20,14 @@ typedef struct RGB {
 
 //extern RGB ledBoard[8][8];
 
-
-
-
-
 class Driver{
 	
 	private:
 	int fd;              /* SPI device file descriptor */
     int leds; /* 75 LEDs in te strand */
-  lpd8806_buffer buf;      /* Memory buffer for pixel values */
-  RGB temp_color;
-  RGB pre_array[8][8];
- 
-	
-	
+	lpd8806_buffer buf;      /* Memory buffer for pixel values */
+	RGB temp_color;
+	RGB pre_array[8][8];
 	
 	public:
 		Driver();

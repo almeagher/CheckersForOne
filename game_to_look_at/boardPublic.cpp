@@ -31,59 +31,53 @@ using std::tolower;
 //called by inputCommand
 //RGB ledBoard[8][8];
 
-void board::setLEDBoard(vector<int> p, Driver& driver, Checkerboard &chk){
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			ledBoard[i][j].r = 0;
-			ledBoard[i][j].g = 0;
-			ledBoard[i][j].b = 0;
+void board::setLEDBoard(vector<vector<int>> p, Driver& driver, Checkerboard &chk){
+	driver.clear_led();
+	for(int r = 0; r < p.size(); r++){
+		if(p[r].size() > 4){
+			for(int c = 0; c < p[r].size(); c+=2){
+				ledBoard[p[r][c]][p[r][c+1]].r = 0;
+				ledBoard[p[r][c]][p[r][c+1]].g = 0;
+				ledBoard[p[r][c]][p[r][c+1]].b = 128;
+				ledBoard[p[r][c+2]][p[r][c+3]].r = 0;
+				ledBoard[p[r][c+2]][p[r][c+3]].g = 128;
+				ledBoard[p[r][c+2]][p[r][c+3]].b = 0;
+			}
+		}
+		else{
+			ledBoard[p[r][0]][p[r][1]].r = 0;
+			ledBoard[p[r][0]][p[r][1]].g = 0;
+			ledBoard[p[r][0]][p[r][1]].b = 128;
+			ledBoard[p[r][2]][p[r][3]].r = 0;
+			ledBoard[p[r][2]][p[r][3]].g = 128;
+			ledBoard[p[r][2]][p[r][3]].b = 0;
 		}
 	}
-	cout << endl;
-	for(int i = 0; i < p.size()-2; i+= 4){
-		ledBoard[p[i]][p[i+1]].r = 0;
-		ledBoard[p[i]][p[i+1]].g = 0;
-		ledBoard[p[i]][p[i+1]].b = 128;
-		ledBoard[p[i+2]][p[i+3]].r = 0;
-		ledBoard[p[i+2]][p[i+3]].g = 128;
-		ledBoard[p[i+2]][p[i+3]].b = 0;
-	}
-
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			cout << "(" << ledBoard[i][j].r << "," << ledBoard[i][j].g << "," << ledBoard[i][j].b << ") ";
-		}
-		cout << endl;
-	}
+	
+	chk.printLedBoard();
 	possible.clear();
 	driver.writeToLeds(ledBoard);
 }
 void board::convertCommand(const string& s, Driver& driver, Checkerboard &chk){
-	int positionR = -4, positionC = -4, possibleR = -4, possibleC = -4;
+	vector<int> oneMove;
 	string::const_iterator it = s.begin();
 	cout << "(" << (*it) << ", ";
-	positionR = (*it) - '0';
+	oneMove.push_back((*it) - '0');
 
 	it += 2;
 	cout << (*it) << ") ";
-	positionC = (*it) - '0';
+	oneMove.push_back((*it) - '0');
 	it += 2;
 	while (*it != '-'){
 		cout << "-> (" << (*it) << ", ";
-		possibleR = (*it) - '0';
+		oneMove.push_back((*it) - '0');
 		it += 2;
 		cout << (*it) << ") ";
-		possibleC = (*it) - '0';
-		cout << positionR << " "<< positionC << " " << possibleR << " " << possibleC;
-		
-		possible.push_back(positionR);
-		possible.push_back(positionC);
-		possible.push_back(possibleR);
-		possible.push_back(possibleC);
+		oneMove.push_back((*it) - '0');
 			
 		it += 2;
 	}
-	
+	possible.push_back(oneMove);
 }
 
 //functions for outputting commands
@@ -106,7 +100,7 @@ void board::inputCommand(Driver &driver, Checkerboard &chk){
 	//input command again until one is matched
 	//getline(cin, m);
 	
-	
+	printPossible();
 	while(chk.checkMoved(driver, getPossible()) == false){
 		
 	}
@@ -137,7 +131,7 @@ void board::inputCommand(Driver &driver, Checkerboard &chk){
 		}
 		
 	}
-	setLEDBoard(getPossible(), driver, chk);
+	//setLEDBoard(getPossible(), driver, chk);
 	makeMove(*it);
 }
 
