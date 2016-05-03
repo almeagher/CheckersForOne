@@ -16,7 +16,7 @@ typedef struct coord {
 class Checkerboard{
 public:
 	string pieceMoved;
-	
+	bool alreadyShowingMoves = false;
 	int prevBoard[8][8];
 	int currBoard[8][8];
 
@@ -28,17 +28,22 @@ public:
 	void printPrevBoard();
 	void printLedBoard();
 	void clearLedBoard();
+	void setToError(int r, int c);
+	void possDest(int r, int c);
+	void possSource(int r, int c);
 	
 	void changeBoard();
 	void getNewBoard(int newBoard[8][8]);
 	
 	string getPieceMoved();
+	vector<int> getMoveMade(Driver &driver, vector<vector<int>> p, coord mf, coord mt);
 	vector<vector<int>> createVector(coord mf, coord mt);
 	void showPossibleMoves(Driver &driver, vector<vector<int>> p);
 	
-	bool waitUntilMoved(Driver &driver, coord mf, coord mt);
+	bool waitUntilMoved(Driver &driver, coord mf, coord mt, vector<vector<int>> p);
 	bool checkMoved(Driver &driver, vector<vector<int>> p);
 	bool checkJumped(Driver &driver, vector<vector<int>> p, coord mf, coord mt);
+	void getRidOfPieces(Driver &driver, vector<int> p);
 	void capturedPiece(Driver &driver, int r, int c);
 	
 	/*

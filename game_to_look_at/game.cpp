@@ -53,7 +53,7 @@ void game::endMessage(Driver &driver){
 	if (currentB->getTurn() == 'r'){
 		cout << "Player 1 wins." << endl;
 		for(int i = 0; i < 4; i++){
-			for(int j = 0; j < 4; j++){
+			for(int j = 0; j < 8; j++){
 				ledBoard[i][j].r = 0;
 				ledBoard[i][j].g = 128;
 				ledBoard[i][j].b = 0;
@@ -64,7 +64,7 @@ void game::endMessage(Driver &driver){
 	else{
 		cout << "Player 2 wins." << endl;
 		for(int i = 5; i < 8; i++){
-			for(int j = 5; j < 8; j++){
+			for(int j = 0; j < 8; j++){
 				ledBoard[i][j].r = 0;
 				ledBoard[i][j].g = 128;
 				ledBoard[i][j].b = 0;
@@ -143,19 +143,21 @@ void game::outputMessage(Driver &driver, Checkerboard &chk){
 	
 	cout << "Comp moved: ";
 	vector<vector<int>> p = (board:: getPossible());
+	chk.possSource(p[0][0], p[0][1]);
+	chk.possDest(p[0][2], p[0][3]);
 	
-	ledBoard[p[0][0]][p[0][1]].r = 0;
+	/*ledBoard[p[0][0]][p[0][1]].r = 0;
 	ledBoard[p[0][0]][p[0][1]].g = 0;
 	ledBoard[p[0][0]][p[0][1]].b = 128;
 	ledBoard[p[0][2]][p[0][3]].r = 0;
 	ledBoard[p[0][2]][p[0][3]].g = 128;
-	ledBoard[p[0][2]][p[0][3]].b = 0;
+	ledBoard[p[0][2]][p[0][3]].b = 0;*/
 	driver.writeToLeds(ledBoard);
 	coord movedFrom = {p[0][0], p[0][1]};
 	coord movedTo = {p[0][2], p[0][3]};
 	
 	cout << movedFrom.x << movedFrom.y << movedTo.x << movedTo.y << endl;
-	while(chk.waitUntilMoved(driver, movedFrom, movedTo) == false){
+	while(chk.waitUntilMoved(driver, movedFrom, movedTo, p) == false){
 		
 	}
 	//string compMove = to_string(p[0]) + " " + to_string(p[1]) + " " + to_string(p[2]) + " " + to_string(p[3]);

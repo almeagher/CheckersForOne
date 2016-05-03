@@ -116,6 +116,7 @@ void board::inputCommand(Driver &driver, Checkerboard &chk){
 			convertCommand((*it)->command, driver, chk);
 			cout << endl;
 			chk.changeBoard();
+			clearPossible();
 			break;
 			
 		}
