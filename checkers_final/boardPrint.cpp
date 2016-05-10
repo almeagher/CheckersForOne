@@ -114,9 +114,9 @@ void board::whoComputer(bool p1, bool p2){
 		board::isComputer[0] = true;
 	else if(!p1)
 		board::isComputer[0] = false;
-	else if(p2)
+	if(p2)
 		board::isComputer[1] = true;
-	else
+	else if(!p2)
 		board::isComputer[1] = false;
 
 	timeLimit = 3;
